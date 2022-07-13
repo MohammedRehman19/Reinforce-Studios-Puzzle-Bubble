@@ -27,7 +27,7 @@ namespace com.javierquevedo{
 			
 			}
 			
-			void OnGUI(){
+			/*void OnGUI(){
 				GUI.Box(new Rect(Screen.width/2 - _menuWidth /2.0f, Screen.height/2 - _menuHeight /2.0f, _menuWidth, _menuHeight), "Bubble Shooter");
 				GUI.Label(new Rect(20,20,200,30), "Javier Quevedo-Fernandez");
 				GUI.Label(new Rect(20,40,200,30), "http://github.com/senc01a");
@@ -36,9 +36,9 @@ namespace com.javierquevedo{
 					this.startGame();
 				}
 				
-			}
+			}*/
 			
-			private void startGame(){
+			public void startGame(){
 				if (this.startGameDelegate != null)
 					this.startGameDelegate();
 			}
