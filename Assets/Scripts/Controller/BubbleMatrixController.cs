@@ -44,6 +44,8 @@ namespace com.javierquevedo{
 		}
 		
 		void Start(){
+
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 		
 		public void startGame(){
@@ -80,7 +82,7 @@ namespace com.javierquevedo{
 			bubbleController.rightBorder = this.geometry.rightBorder;
 			bubbleController.topBorder = this.geometry.topBorder;
 			bubbleController.radius = this.geometry.bubbleRadius;
-			bubbleController.linearSpeed = _bubbleLinearSpeed;
+			bubbleController.linearSpeed = _bubbleLinearSpeed*2;
 			bubbleController.angle = 90.0f;
 			bubbleController.isMoving = false;
 			bubbleController.CollisionDelegate = onBubbleCollision;

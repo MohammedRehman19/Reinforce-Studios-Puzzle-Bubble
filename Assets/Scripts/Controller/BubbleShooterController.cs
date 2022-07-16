@@ -6,7 +6,7 @@ public class BubbleShooterController : MonoBehaviour {
 	
 	public bool isAiming;
 
-	private float rotationSpeed = 50.0f;
+	private float rotationSpeed = 300.0f;
 	private float maxLeftAngle = 85.0f;
 	private float maxRightAngle = 275.0f;
 	
