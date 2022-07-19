@@ -14,6 +14,7 @@ namespace com.javierquevedo{
 		private GameObject _camera;
 		private BubbleMatrixController _bubbleMatrixController;
 		private HUD _hud;
+		public bool _isGameOver;
 		void Awake(){
 			_game = new com.javierquevedo.Game();	
 		}
@@ -58,13 +59,30 @@ namespace com.javierquevedo{
 		}
 		
 		protected virtual void onGameFinished(GameState state){
+			_isGameOver = true;
 			GameFinishedGUI finishedGUI =  _camera.AddComponent<GameFinishedGUI>();
 			finishedGUI.StartNewGameSelectedDelegate = this.onGameStartSelected;
 			this._game.state = state;
 			finishedGUI.game = this._game;
+			StartCoroutine(GameEndBlackMaterial());
 			
 		}
-		
+
+
+		private IEnumerator GameEndBlackMaterial()
+        {
+			Cursor.lockState = CursorLockMode.None;
+			BubbleController [] Ball = GameObject.FindObjectsOfType<BubbleController>();
+			int i = 0;
+			 while(i < Ball.Length)
+            {
+				Ball[i].GetComponent<MeshRenderer>().material.color = new Color(0.134f, 0.134f, 0.134f, 0.8f);
+				i++;
+				//temp.kill(false);
+				yield return new WaitForSeconds(0.0001f);
+            }
+        }
+
 		private void onGameStartSelected(){
 			Application.LoadLevel (0);
 		}

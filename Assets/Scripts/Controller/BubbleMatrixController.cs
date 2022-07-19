@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using com.javierquevedo.events;
+using TMPro;
 namespace com.javierquevedo{
 	
 	
@@ -34,8 +35,12 @@ namespace com.javierquevedo{
 		private ArrayList _bubbleControllers;
 		private bool _pendingToAddRow;
 		private bool _isPlaying;
-		//private float _shiftAnimationDuration = 0.2f;
+		public float shootTimeRamining = 10;
+		public float timeRemaining = 30;
 		
+		public TextMeshPro timeTxt;
+		//private float _shiftAnimationDuration = 0.2f;
+
 		void Awake(){
 			this._isPlaying = false;
 			this._pendingToAddRow = false;
@@ -54,6 +59,7 @@ namespace com.javierquevedo{
 			this._bubbleShooter = GameObject.Find ("BubbleShooter");
 			this.geometry = new BubbleMatrixGeometry(leftBorder, rightBorder, topBorder, 0.0f, rows, columns, bubbleRadius);
 			this._currentBubble = this.createBubble();
+			this._currentBubble.isNotshaking = true;
 			this._isPlaying = true;
 			StartCoroutine("addRowScheduler");
 			
@@ -64,12 +70,78 @@ namespace com.javierquevedo{
 		}
 		
 		void Update(){
+			if (GameObject.FindObjectOfType<GameController>()._isGameOver)
+				return;
 			if (Input.GetMouseButtonDown(0) && this._isPlaying){
 				if (this._currentBubble != null){
 					this._currentBubble.isMoving = true;
 					this._currentBubble.angle = this.shootingRotation();
+					this._currentBubble.isNotshaking = false;
 					this._currentBubble = null;
+
+					shootTimeRamining = 10;
+					timeTxt.GetComponent<MeshRenderer>().enabled = false;
 				}
+			}
+			if (timeRemaining > 0)
+			{
+				timeRemaining -= Time.deltaTime;
+			}
+			else
+			{
+				this.addRow();
+				StartCoroutine("addRowScheduler");
+				timeRemaining = 12;
+
+
+				BubbleController[] allChildren = GetComponentsInChildren<BubbleController>();
+				foreach (BubbleController child in allChildren)
+				{
+					if (child.isShaking)
+					{
+
+						child.isShaking = false;
+						child.speed += 10;
+					}
+				}
+			}
+			if(timeRemaining <= 10)
+            {
+				BubbleController[] allChildren = GetComponentsInChildren<BubbleController>();
+				foreach (BubbleController child in allChildren)
+				{
+					if (!child.isShaking && !child.isNotshaking)
+					{
+
+						child.isShaking = true;
+					}
+				}
+			}
+
+			// shoot time remaining
+			if (shootTimeRamining > 0)
+			{
+				timeTxt.GetComponent<MeshRenderer>().enabled = false;
+				shootTimeRamining -= Time.deltaTime;
+			}
+			else
+			{
+				this._currentBubble.isMoving = true;
+				this._currentBubble.angle = this.shootingRotation();
+				this._currentBubble = null;
+				shootTimeRamining = 10;
+				timeTxt.GetComponent<MeshRenderer>().enabled = false;
+			}
+
+			if (shootTimeRamining < 7)
+			{
+				timeTxt.GetComponent<MeshRenderer>().enabled = true;
+				timeTxt.text = "Hurryup!";				
+
+			}
+			if (shootTimeRamining < 5)
+			{
+				timeTxt.text = Mathf.RoundToInt(shootTimeRamining).ToString();
 			}
 		}
 		
@@ -105,9 +177,10 @@ namespace com.javierquevedo{
 		
 		private void destroyBubble(BubbleController bubbleController, bool explodes){
 			this._matrix.remove(bubbleController.bubble);
+			;
 			this._bubbleControllers.Remove(bubbleController);
 			bubbleController.CollisionDelegate = null;
-			bubbleController.kill(explodes);
+			bubbleController.kill(false);
 			//Destroy(bubbleController.gameObject);
 		}
 		
@@ -220,19 +293,21 @@ namespace com.javierquevedo{
 				GameEvents.BubblesRemoved(cluster.Count, false);
 			
 			// Add a new Row of random bubbles if required
-			if (_pendingToAddRow){
-				this.addRow();
-				StartCoroutine("addRowScheduler");
-			}
+			//if (_pendingToAddRow){
+			//	this.addRow();
+			//	StartCoroutine("addRowScheduler");
+			//}
 			
 			// If there are no bubble lefts, win the game
 			if (this._matrix.bubbles.Count == 0){
 				this.FinishGame(GameState.Win);
 				return;
 			}
-			
+
 			// Prepare the new bubble to shoot it
+			
 			this._currentBubble = this.createBubble();
+			this._currentBubble.isNotshaking = true;
 		}
 		
 		/*

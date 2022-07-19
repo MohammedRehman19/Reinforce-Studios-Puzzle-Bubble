@@ -21,14 +21,17 @@ namespace com.javierquevedo{
 		public float radius;
 		public float angle; // -90 .. 90  The trayectory angle ___\___
 		public bool isMoving;
-		
+		public bool isShaking;
+		public bool isNotshaking;
 		/* Constants */
 		private const float _killSpeed = 10.0f;
-		
+		public float speed = 10.0f; //how fast it shakes
+		public float amount = 0.1f; //how much it shakes
+
 		/*
 		 * Delegates
 		 */
-		
+
 		MotionDetectionDelegate motionDelegate;
 		public delegate bool MotionDetectionDelegate(Vector3 position);
 		
@@ -58,6 +61,14 @@ namespace com.javierquevedo{
 		}
 
 		void Update () {
+			if (GameObject.FindObjectOfType<GameController>()._isGameOver)
+				return;
+			
+            if (isShaking)
+            {
+				this.transform.localPosition = new Vector3((Mathf.Sin(Time.time * speed) * amount)+ this.transform.localPosition.x, this.transform.localPosition.y, this.transform.localPosition.z);
+			}
+
 			if (isMoving){
 				this.transform.Translate(Vector3.right * this.linearSpeed * Mathf.Cos(Mathf.Deg2Rad *this.angle) * Time.deltaTime);
 				this.transform.Translate(Vector3.up * this.linearSpeed * Mathf.Sin(Mathf.Deg2Rad *this.angle) * Time.deltaTime);
@@ -82,6 +93,8 @@ namespace com.javierquevedo{
 		
 		public void kill(bool explodes){
 			StopAllCoroutines();
+			this.GetComponent<MeshRenderer>().material.color = new Color(0.134f,0.134f,0.134f,0.7f);
+			
 			Destroy(this.transform.GetComponent<Rigidbody>());
 			Destroy(this.transform.GetComponent<Collider>());
 			if (explodes)
@@ -92,6 +105,7 @@ namespace com.javierquevedo{
 				Vector3 killPosition = new Vector3(this.transform.position.x, 0f, 0f);
 				float distance = Vector3.Distance(this.transform.position, killPosition);
 				this.moveTo(killPosition, distance/_killSpeed);
+				
 			}
 		}
 		
