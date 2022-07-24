@@ -79,9 +79,23 @@ namespace com.javierquevedo{
 				Ball[i].GetComponent<MeshRenderer>().material.color = new Color(0.134f, 0.134f, 0.134f, 0.8f);
 				i++;
 				//temp.kill(false);
-				yield return new WaitForSeconds(0.0001f);
+				yield return new WaitForSeconds(0.00001f);
             }
         }
+
+		public IEnumerator GameEndBlackMaterialKill ()
+		{
+			Cursor.lockState = CursorLockMode.None;
+			BubbleController[] Ball = GameObject.FindObjectsOfType<BubbleController>();
+			int i = 0;
+			while (i < Ball.Length)
+			{
+				Ball[i].GetComponent<MeshRenderer>().material.color = new Color(0.134f, 0.134f, 0.134f, 0.8f);
+				i++;
+				Ball[i].kill(false);
+				yield return null;
+			}
+		}
 
 		private void onGameStartSelected(){
 			Application.LoadLevel (0);

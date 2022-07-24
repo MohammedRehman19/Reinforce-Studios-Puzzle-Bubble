@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace com.javierquevedo{
 	public enum BubbleColor {Red, Blue, Yellow, Green, Black, White};
@@ -20,6 +21,10 @@ namespace com.javierquevedo{
 				this._color = value;
 			}
 		}
-		
-	}
+
+        public static implicit operator GameObject(Bubble v)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

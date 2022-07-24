@@ -245,7 +245,8 @@ namespace com.javierquevedo{
 		 * Backtrackng recursive function that obtains the cluster of bubble
 		 * which share the same color for a given location
 		 */
-		private ArrayList colorClusterRecursive(Bubble bubble, ArrayList visited){		
+		private ArrayList colorClusterRecursive(Bubble bubble, ArrayList visited){      
+				
 			ArrayList similarColorNeighbours = JQUtils.FilterByColor(this.neighbours(bubble), bubble.color);
 			similarColorNeighbours.Exclusive(visited);
 			visited.Add(bubble);

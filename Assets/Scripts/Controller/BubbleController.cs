@@ -23,10 +23,11 @@ namespace com.javierquevedo{
 		public bool isMoving;
 		public bool isShaking;
 		public bool isNotshaking;
+		public bool getcolorSide;
 		/* Constants */
 		private const float _killSpeed = 10.0f;
-		public float speed = 10.0f; //how fast it shakes
-		public float amount = 0.1f; //how much it shakes
+		[HideInInspector] public float speed = 20; //how fast it shakes
+		private float amount = 0.0005f; //how much it shakes
 
 		/*
 		 * Delegates
@@ -50,14 +51,17 @@ namespace com.javierquevedo{
 			}
 		}
 	
-		void Awake(){
+		
+	public void Randomcolor () {
+			print(gameObject.name);
 			bubble = new Bubble(JQUtils.GetRandomEnum<BubbleColor>());
+			this.GetComponent<Renderer>().material.color = JQUtils.ColorForBubbleColor(bubble.color);
+
 		}
-	
-		void Start () {
-			
-			
-			this.GetComponent<Renderer>().material.color = JQUtils.ColorForBubbleColor(bubble.color);		
+		public void Randomcolor(Bubble br)
+		{
+			bubble = br;
+			this.GetComponent<Renderer>().material.color = JQUtils.ColorForBubbleColor(br.color);
 		}
 
 		void Update () {

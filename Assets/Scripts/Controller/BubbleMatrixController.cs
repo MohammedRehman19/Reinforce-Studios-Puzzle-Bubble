@@ -35,8 +35,8 @@ namespace com.javierquevedo{
 		private ArrayList _bubbleControllers;
 		private bool _pendingToAddRow;
 		private bool _isPlaying;
-		public float shootTimeRamining = 10;
-		public float timeRemaining = 30;
+		private float shootTimeRamining = 10;
+		private float timeRemaining = 30;
 		
 		public TextMeshPro timeTxt;
 		//private float _shiftAnimationDuration = 0.2f;
@@ -59,6 +59,8 @@ namespace com.javierquevedo{
 			this._bubbleShooter = GameObject.Find ("BubbleShooter");
 			this.geometry = new BubbleMatrixGeometry(leftBorder, rightBorder, topBorder, 0.0f, rows, columns, bubbleRadius);
 			this._currentBubble = this.createBubble();
+			this._currentBubble.Randomcolor();
+			GameObject.Find("getColor").GetComponent<BubbleController>().Randomcolor();
 			this._currentBubble.isNotshaking = true;
 			this._isPlaying = true;
 			StartCoroutine("addRowScheduler");
@@ -74,13 +76,14 @@ namespace com.javierquevedo{
 				return;
 			if (Input.GetMouseButtonDown(0) && this._isPlaying){
 				if (this._currentBubble != null){
+					this._currentBubble.isNotshaking = false;
 					this._currentBubble.isMoving = true;
 					this._currentBubble.angle = this.shootingRotation();
-					this._currentBubble.isNotshaking = false;
 					this._currentBubble = null;
 
 					shootTimeRamining = 10;
 					timeTxt.GetComponent<MeshRenderer>().enabled = false;
+					
 				}
 			}
 			if (timeRemaining > 0)
@@ -91,7 +94,7 @@ namespace com.javierquevedo{
 			{
 				this.addRow();
 				StartCoroutine("addRowScheduler");
-				timeRemaining = 12;
+				timeRemaining = 30;
 
 
 				BubbleController[] allChildren = GetComponentsInChildren<BubbleController>();
@@ -110,10 +113,9 @@ namespace com.javierquevedo{
 				BubbleController[] allChildren = GetComponentsInChildren<BubbleController>();
 				foreach (BubbleController child in allChildren)
 				{
-					if (!child.isShaking && !child.isNotshaking)
+					if (!child.isNotshaking)
 					{
-
-						child.isShaking = true;
+					 child.isShaking = true;
 					}
 				}
 			}
@@ -149,6 +151,7 @@ namespace com.javierquevedo{
 			GameObject bubblePrefab = Instantiate(Resources.Load(_bubblePrefabName)) as GameObject;
 			bubblePrefab.transform.parent = _bubblesContainer.transform;
 			bubblePrefab.transform.position = new Vector3((rightBorder - leftBorder) / 2.0f - geometry.bubbleRadius / 2.0f, -0.65f, 0);
+			print(bubblePrefab.transform.position);
 			BubbleController bubbleController = bubblePrefab.GetComponent<BubbleController>();
 			bubbleController.leftBorder = this.geometry.leftBorder;
 			bubbleController.rightBorder = this.geometry.rightBorder;
@@ -213,7 +216,9 @@ namespace com.javierquevedo{
 			
 			for (int i = 0; i<this.geometry.columns; i++){
 				BubbleController bubbleController = this.createBubble();
+				bubbleController.Randomcolor();
 				bubbleController.isMoving = false;
+			
 				this._matrix.insert(bubbleController.bubble, 0,i);
 			}
 			
@@ -237,6 +242,7 @@ namespace com.javierquevedo{
 		 * @param {GameState} the state of the game, whether it was won or lost
 		 */
 		private void FinishGame(GameState state){
+			
 			BubbleShooterController shooterController = this._bubbleShooter.GetComponent<BubbleShooterController>();
 			shooterController.isAiming = false;
 			GameEvents.GameFinished(state);
@@ -305,8 +311,12 @@ namespace com.javierquevedo{
 			}
 
 			// Prepare the new bubble to shoot it
-			
+			print("new called");
 			this._currentBubble = this.createBubble();
+			//this._currentBubble.Randomcolor();
+			//	this._currentBubble.GetComponent<MeshRenderer>().material.color = GameObject.FindObjectOfType<Getcontroller>().GetComponent<MeshRenderer>().material.color;
+			_currentBubble.Randomcolor(GameObject.Find("getColor").GetComponent<BubbleController>().bubble);
+			GameObject.Find("getColor").GetComponent<BubbleController>().Randomcolor();
 			this._currentBubble.isNotshaking = true;
 		}
 		
