@@ -27,11 +27,15 @@ public class LevelManager : MonoBehaviour
     public GameObject rightLine;
     private bool lastLineIsLeft = true;
     public string playerTag;
-    
+
     private void Start()
     {
         grid = GetComponent<Grid>();
     }
+    /*private void Update()
+    {
+        print(transform.position);
+    }*/
 
     public void GenerateLevel()
     {
@@ -90,7 +94,7 @@ public class LevelManager : MonoBehaviour
             bubble.transform.position = t.position;
             bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
             bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
-
+            bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
         }
 
         Destroy(go);

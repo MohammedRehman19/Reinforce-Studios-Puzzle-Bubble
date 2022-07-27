@@ -13,7 +13,7 @@ public class Bubble : MonoBehaviour
     public BubbleColor bubbleColor;
     public LevelManager Lm;
     public GameManager Gm;
-
+    public bool _isGameoverLineChecker = false;
 
     private void Start()
     {
@@ -23,10 +23,10 @@ public class Bubble : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-      
+
         if (collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().isFixed)
         {
-            print("we are in");
+
             if (!isFixed)
             {
                 HasCollided();
@@ -35,7 +35,7 @@ public class Bubble : MonoBehaviour
 
         if (collision.gameObject.tag == "Limit")
         {
-            print("we are in...2222");
+
             if (!isFixed)
             {
                 HasCollided();
@@ -43,6 +43,8 @@ public class Bubble : MonoBehaviour
         }
     }
 
+  
+   
     private void HasCollided()
     {
         var rb = GetComponent<Rigidbody2D>();
