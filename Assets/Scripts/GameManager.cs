@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    #region Singleton
+  /*  #region Singleton
     public static GameManager instance;
 
     private void Awake()
@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
-    #endregion
+    #endregion*/
 
     public Shooter shootScript;
     public Transform pointerToLastLine;
@@ -21,12 +21,12 @@ public class GameManager : MonoBehaviour
     private int sequenceSize = 3;
     [SerializeField]
     private List<Transform> bubbleSequence;
-
+    public LevelManager LM;
     void Start()
     {
         bubbleSequence = new List<Transform>();
 
-        LevelManager.instance.GenerateLevel();
+       LM.GenerateLevel();
         
         shootScript.canShoot = true;
         shootScript.CreateNextBubble();
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
             DropDisconectedBubbles();
         }
 
-        LevelManager.instance.UpdateListOfBubblesInScene();
+       LM.UpdateListOfBubblesInScene();
 
         shootScript.CreateNextBubble();
         shootScript.canShoot = true;
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     #region Drop Disconected Bubbles
     private void SetAllBubblesConnectionToFalse()
     {
-        foreach (Transform bubble in LevelManager.instance.bubblesArea)
+        foreach (Transform bubble in LM.bubblesArea)
         {
             bubble.GetComponent<Bubble>().isConnected = false;
         }
@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
 
     private void SetGravityToDisconectedBubbles()
     {
-        foreach (Transform bubble in LevelManager.instance.bubblesArea)
+        foreach (Transform bubble in LM.bubblesArea)
         {
             if (!bubble.GetComponent<Bubble>().isConnected)
             {

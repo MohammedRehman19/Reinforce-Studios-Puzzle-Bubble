@@ -15,7 +15,8 @@ public class Shooter : MonoBehaviour
     private float lookAngle;
     public bool isSwaping = false;
     public float time = 0.02f;
-
+    public LevelManager Lm;
+    public GameManager Gm;
     public void Update()
     {
         lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -64,8 +65,8 @@ public class Shooter : MonoBehaviour
     [ContextMenu("CreateNextBubble")]
     public void CreateNextBubble()
     {
-        List<GameObject> bubblesInScene = LevelManager.instance.bubblesInScene;
-        List<string> colors = LevelManager.instance.colorsInScene;
+        List<GameObject> bubblesInScene = Lm.bubblesInScene;
+        List<string> colors =Lm.colorsInScene;
 
         if (nextBubble == null)
         {
@@ -95,7 +96,8 @@ public class Shooter : MonoBehaviour
         newBubble.GetComponent<Bubble>().isFixed = false;
         Rigidbody2D rb2d = newBubble.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
         rb2d.gravityScale = 0f;
-
+        newBubble.GetComponent<Bubble>().Lm = Lm;
+        newBubble.GetComponent<Bubble>().Gm = Gm;
         return newBubble;
     }
 }

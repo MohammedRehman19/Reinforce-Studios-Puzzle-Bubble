@@ -11,11 +11,22 @@ public class Bubble : MonoBehaviour
     public bool isConnected;
 
     public BubbleColor bubbleColor;
+    public LevelManager Lm;
+    public GameManager Gm;
 
+
+    private void Start()
+    {
+       
+        
+        
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+      
         if (collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().isFixed)
         {
+            print("we are in");
             if (!isFixed)
             {
                 HasCollided();
@@ -24,6 +35,7 @@ public class Bubble : MonoBehaviour
 
         if (collision.gameObject.tag == "Limit")
         {
+            print("we are in...2222");
             if (!isFixed)
             {
                 HasCollided();
@@ -36,8 +48,8 @@ public class Bubble : MonoBehaviour
         var rb = GetComponent<Rigidbody2D>();
         Destroy(rb);
         isFixed = true;
-        LevelManager.instance.SetAsBubbleAreaChild(transform);
-        GameManager.instance.ProcessTurn(transform);
+        Lm.SetAsBubbleAreaChild(transform);
+       Gm.ProcessTurn(transform);
     }
 
     public List<Transform> GetNeighbors()

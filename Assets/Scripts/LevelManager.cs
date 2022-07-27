@@ -4,7 +4,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
 
-    #region Singleton
+   /* #region Singleton
     public static LevelManager instance;
 
     private void Awake()
@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
             instance = this;
         }
     }
-    #endregion
+    #endregion*/
 
     public Grid grid;
     public Transform bubblesArea;
@@ -26,8 +26,8 @@ public class LevelManager : MonoBehaviour
     public GameObject leftLine;
     public GameObject rightLine;
     private bool lastLineIsLeft = true;
-
-
+    public string playerTag;
+    
     private void Start()
     {
         grid = GetComponent<Grid>();
@@ -35,7 +35,7 @@ public class LevelManager : MonoBehaviour
 
     public void GenerateLevel()
     {
-        FillWithBubbles(GameObject.FindGameObjectWithTag("InitialLevelScene"), bubblesPrefabs);
+        FillWithBubbles(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs);
         SnapChildrensToGrid(bubblesArea);
         UpdateListOfBubblesInScene();
     }
@@ -88,6 +88,9 @@ public class LevelManager : MonoBehaviour
         {
             var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)], bubblesArea);
             bubble.transform.position = t.position;
+            bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
+            bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
+
         }
 
         Destroy(go);
@@ -124,5 +127,6 @@ public class LevelManager : MonoBehaviour
     {
         SnapToNearestGripPosition(bubble);
         bubble.SetParent(bubblesArea);
+       
     }
 }
