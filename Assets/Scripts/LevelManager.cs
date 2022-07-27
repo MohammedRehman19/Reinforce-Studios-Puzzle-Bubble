@@ -32,10 +32,13 @@ public class LevelManager : MonoBehaviour
     {
         grid = GetComponent<Grid>();
     }
-    /*private void Update()
+    private void Update()
     {
-        print(transform.position);
-    }*/
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            AddNewLine();
+        }
+    }
 
     public void GenerateLevel()
     {

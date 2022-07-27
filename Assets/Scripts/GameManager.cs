@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class GameManager : MonoBehaviour
 {
   /*  #region Singleton
@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Transform> bubbleSequence;
     public LevelManager LM;
+    public float counter = 10;
+    public TextMeshProUGUI countertxt;
     void Start()
     {
         bubbleSequence = new List<Transform>();
@@ -40,9 +42,33 @@ public class GameManager : MonoBehaviour
         {
             shootScript.canShoot = false;
             shootScript.Shoot();
+            counter = 10;
+            countertxt.enabled = false;
         }
+
+     
     }
 
+    private void FixedUpdate()
+    {
+        counter -= Time.deltaTime;
+        if (counter > 4 && counter < 5)
+        {
+            countertxt.enabled = true;
+            countertxt.text = "Hurry Yup !";
+        }
+        else if (counter < 4 && counter > 0)
+        {
+            countertxt.text = Mathf.RoundToInt(counter).ToString();
+        }
+        else if (counter <= 0)
+        {
+            shootScript.canShoot = false;
+            shootScript.Shoot();
+            counter = 10;
+            countertxt.enabled = false;
+        }
+    }
     public void ProcessTurn(Transform currentBubble)
     {
         bubbleSequence.Clear();
