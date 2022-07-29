@@ -9,6 +9,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        print(photonView.Controller.ToString()[2]);
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach(Shooter S in Shooters)
         {

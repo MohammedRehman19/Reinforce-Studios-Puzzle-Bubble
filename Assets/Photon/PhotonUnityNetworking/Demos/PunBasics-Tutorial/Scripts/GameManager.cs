@@ -52,12 +52,12 @@ namespace Photon.Pun.Demo.PunBasics
 			Instance = this;
 
 			// in case we started this demo with the wrong scene being active, simply load the menu scene
-			if (!PhotonNetwork.IsConnected)
+		/*	if (!PhotonNetwork.IsConnected)
 			{
 				SceneManager.LoadScene("PunBasics-Launcher");
 
 				return;
-			}
+			}*/
 
 			if (playerPrefab == null) { // #Tip Never assume public properties of Components are filled up properly, always check and inform the developer of it.
 
@@ -70,7 +70,7 @@ namespace Photon.Pun.Demo.PunBasics
 				    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
 					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-				GameObject pv =	PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
+				    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
 					
 
 				}else{
@@ -88,11 +88,11 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 		void Update()
 		{
-			// "back" button of phone equals "Escape". quit app if that's pressed
+			/*// "back" button of phone equals "Escape". quit app if that's pressed
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				QuitApplication();
-			}
+			}*/
 		}
 
         #endregion
@@ -119,7 +119,7 @@ namespace Photon.Pun.Demo.PunBasics
 		/// Called when a Photon Player got disconnected. We need to load a smaller scene.
 		/// </summary>
 		/// <param name="other">Other.</param>
-		public override void OnPlayerLeftRoom( Player other  )
+		/*public override void OnPlayerLeftRoom( Player other  )
 		{
 			Debug.Log( "OnPlayerLeftRoom() " + other.NickName ); // seen when other disconnects
 
@@ -129,21 +129,21 @@ namespace Photon.Pun.Demo.PunBasics
 
 			//	LoadArena(); 
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Called when the local player left the room. We need to load the launcher scene.
 		/// </summary>
-		public override void OnLeftRoom()
+	/*	public override void OnLeftRoom()
 		{
 			SceneManager.LoadScene("PunBasics-Launcher");
-		}
+		}*/
 
 		#endregion
 
 		#region Public Methods
 
-		public void LeaveRoom()
+		/*public void LeaveRoom()
 		{
 			PhotonNetwork.LeaveRoom();
 		}
@@ -151,13 +151,13 @@ namespace Photon.Pun.Demo.PunBasics
 		public void QuitApplication()
 		{
 			Application.Quit();
-		}
+		}*/
 
 		#endregion
 
 		#region Private Methods
 
-		void LoadArena()
+	/*	void LoadArena()
 		{
 			//if ( ! PhotonNetwork.IsMasterClient )
 			//{
@@ -167,7 +167,7 @@ namespace Photon.Pun.Demo.PunBasics
 			//Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
 
 			PhotonNetwork.LoadLevel("Level1");
-		}
+		}*/
 
 		#endregion
 

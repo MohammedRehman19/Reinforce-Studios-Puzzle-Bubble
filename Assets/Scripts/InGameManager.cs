@@ -2,7 +2,7 @@
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
-public class GameManager : MonoBehaviourPunCallbacks
+public class InGameManager : MonoBehaviourPunCallbacks
 {
   /*  #region Singleton
     public static GameManager instance;

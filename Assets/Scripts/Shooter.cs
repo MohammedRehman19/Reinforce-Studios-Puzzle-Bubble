@@ -17,7 +17,7 @@ public class Shooter : MonoBehaviourPunCallbacks
     public bool isSwaping = false;
     public float time = 0.02f;
     public LevelManager Lm;
-    public GameManager Gm;
+    public InGameManager Gm;
     public PhotonView pv;
     public bool _ismine;
     public void Update()
