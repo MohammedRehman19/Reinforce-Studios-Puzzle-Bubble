@@ -12,7 +12,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach(Shooter S in Shooters)
         {
-            if(S._ismine == photonView.IsMine)
+            if(photonView.IsMine)
             {
                 OurShooter = S;
                 OurShooter.pv = this.photonView;
@@ -87,6 +87,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     void createbubble(string Area,int bubblenum, float xs, float ys, float zs)
     {
       Transform bubblesArea =  GameObject.Find(Area).transform;
+        print(Area);
         PhotonView [] ps = GameObject.FindObjectsOfType<PhotonView>();
         foreach (PhotonView p in ps)
         {
