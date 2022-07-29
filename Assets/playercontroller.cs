@@ -82,11 +82,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 tempshooter = S;
             }
         }
-
-        print("move");
-        tempshooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, r-90);
-        tempshooter.transform.rotation = Quaternion.Euler(0f, 0f, r- 90f);
-             
+        if (tempshooter != null)
+        {
+            print("move");
+            tempshooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, r - 90);
+            tempshooter.transform.rotation = Quaternion.Euler(0f, 0f, r - 90f);
+        }
     }
     [PunRPC]
     void shoot(string Vid)
@@ -108,10 +109,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 tempshooter = S;
             }
         }
-
-        print("shoot");
-        tempshooter.canShoot = false;
-        tempshooter.Shoot();
+        if (tempshooter != null)
+        {
+            print("shoot");
+            tempshooter.canShoot = false;
+            tempshooter.Shoot();
+        }
         
     }
 
