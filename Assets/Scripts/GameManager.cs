@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private int sequenceSize = 3;
     [SerializeField]
-    private List<Transform> bubbleSequence;
+    public List<Transform> bubbleSequence;
     public LevelManager LM;
     public float counter = 10;
     public TextMeshProUGUI countertxt;
@@ -57,12 +57,20 @@ public class GameManager : MonoBehaviourPunCallbacks
                     pv = p.GetComponent<PhotonView>();
                     print(this.gameObject.name);
                     bubbleSequence = new List<Transform>();
+                    playercontroller[] pp = GameObject.FindObjectsOfType<playercontroller>();
+                    foreach (playercontroller pps in Listp)
+                    {
+                        pps.callbubbleSequence();
+                    }
+                        LM.GenerateLevel();
+                    shootScript.canShoot = true;
+                    foreach (playercontroller pps in Listp)
+                    {
+                        pps.callcreateshoot();
+                    }
 
-                    LM.GenerateLevel();
-                    
-                      
-                       
-                        shootScript.canShoot = true;
+
+                   
                         shootScript.CreateNextBubble();
 
                         //a

@@ -28,7 +28,7 @@ public class LevelManager : MonoBehaviour
     public GameObject rightLine;
     private bool lastLineIsLeft = true;
     public string playerTag;
-
+    public GameManager Manager;
     private void Start()
     {
         grid = GetComponent<Grid>();
@@ -57,6 +57,8 @@ public class LevelManager : MonoBehaviour
             //        p.callupdatesnape();
             //    }
             //}
+
+        
         
     }
 
@@ -104,6 +106,21 @@ public class LevelManager : MonoBehaviour
 
     private void FillWithBubbles(GameObject go, List<GameObject> bubbles)
     {
+        GameManager[] GM = GameObject.FindObjectsOfType<GameManager>();
+        GameObject goClone = null;
+        Transform bubbleAreaClone = null;
+        int counter = 0;
+        foreach (GameManager G in GM)
+        {
+
+            if (!G._ismine)
+            {
+                 goClone = GameObject.FindGameObjectWithTag(G.LM.playerTag);
+                 bubbleAreaClone = G.LM.bubblesArea;
+            }
+
+        }
+      
         foreach (Transform t in go.transform)
         {
             var bubble = PhotonNetwork.Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)].name, bubblesArea.position,Quaternion.identity,0);
@@ -114,13 +131,27 @@ public class LevelManager : MonoBehaviour
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
             playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
 
-            foreach(playercontroller p in pc)
+            if (Manager._ismine)
             {
-                if (p.GetComponent<PhotonView>().IsMine)
+                foreach (playercontroller p in pc)
                 {
-                    p.callCreatebubble(bubblesArea.name,bubble.GetComponent<PhotonView>().ViewID,t.position.x,t.position.y,t.position.z);
+                    if (p.GetComponent<PhotonView>().IsMine && goClone != null)
+                    {
+                        p.callCreatebubble(bubbleAreaClone.name, bubble.GetComponent<PhotonView>().ViewID, goClone.transform.GetChild(counter).position.x, goClone.transform.GetChild(counter).position.y, goClone.transform.GetChild(counter).position.z);
+                    }
                 }
             }
+            if (!Manager._ismine)
+            {
+                foreach (playercontroller p in pc)
+                {
+                    if (p.GetComponent<PhotonView>().IsMine && goClone != null)
+                    {
+                        p.callCreatebubble(bubblesArea.name, bubble.GetComponent<PhotonView>().ViewID, t.position.x, t.position.y, t.position.z);
+                    }
+                }
+            }
+            counter += 1;
         }
 
         Destroy(go);

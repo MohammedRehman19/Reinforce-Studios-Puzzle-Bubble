@@ -61,7 +61,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         foreach (Shooter S in Shooters)
         {
-            if (S._ismine == false)
+            if (!S._ismine)
             {
                 print("rotatinggg");
                 S.gunSprite.rotation = Quaternion.Euler(0f, 0f, r-90);
@@ -74,7 +74,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         foreach (Shooter S in Shooters)
         {
-            if (S._ismine == false)
+            if (!S._ismine)
             {
                 print("shooting");
                 S.canShoot = false;
@@ -119,9 +119,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         foreach (Shooter S in Shooters)
         {
-            
+            if (!S._ismine)
+            {
                 S.canShoot = true;
-                S.CreateNextBubble();
+            }
+             //   S.CreateNextBubble();
             
         
         }
@@ -136,10 +138,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         foreach (Shooter S in Shooters)
         {
+            if (!S._ismine)
+            {
+                S.Gm.bubbleSequence = new List<Transform>();
+            }
             
-//                S.Gm.bubbleSequence = new List<Transform>();
-            
-
         }
     }
     public void callnewbubble(int viewid)
@@ -152,7 +155,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
        
                 foreach (Shooter S in Shooters)
                 {
-                   if(S._ismine == false)
+                   if(!S._ismine)
             {
 
                 PhotonView[] pv = GameObject.FindObjectsOfType<PhotonView>();
