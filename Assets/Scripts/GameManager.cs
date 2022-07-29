@@ -52,29 +52,30 @@ public class GameManager : MonoBehaviourPunCallbacks
             playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
             foreach (playercontroller p in Listp)
             {
-                if (p.GetComponent<PhotonView>().IsMine == _ismine && PhotonNetwork.IsMasterClient)
+                if (p.GetComponent<PhotonView>().IsMine == _ismine )
                 {
                     pv = p.GetComponent<PhotonView>();
-                    print(this.gameObject.name);
+                 //   print(this.gameObject.name);
                     bubbleSequence = new List<Transform>();
-                    playercontroller[] pp = GameObject.FindObjectsOfType<playercontroller>();
+                   /* playercontroller[] pp = GameObject.FindObjectsOfType<playercontroller>();
                     foreach (playercontroller pps in Listp)
                     {
                         pps.callbubbleSequence();
-                    }
+                    }*/
                         LM.GenerateLevel();
                     shootScript.canShoot = true;
-                    foreach (playercontroller pps in Listp)
-                    {
-                        pps.callcreateshoot();
-                    }
+                    shootScript.CreateNextBubble();
+                    /* foreach (playercontroller pps in Listp)
+                     {
+                         pps.callcreateshoot();
+                     }
+ */
 
 
-                   
-                        shootScript.CreateNextBubble();
 
-                        //a
-                    
+
+                    //a
+
                 }
                
 

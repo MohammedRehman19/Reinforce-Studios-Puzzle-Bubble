@@ -63,7 +63,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (!S._ismine)
             {
-                print("rotatinggg");
+              //  print("rotatinggg");
                 S.gunSprite.rotation = Quaternion.Euler(0f, 0f, r-90);
                 S.transform.rotation = Quaternion.Euler(0f, 0f, r- 90f);
             }
@@ -76,7 +76,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (!S._ismine)
             {
-                print("shooting");
+              //  print("shooting");
                 S.canShoot = false;
                 S.Shoot();
             }
