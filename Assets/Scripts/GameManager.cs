@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public class GameManager : MonoBehaviour
+using Photon.Pun;
+public class GameManager : MonoBehaviourPunCallbacks
 {
   /*  #region Singleton
     public static GameManager instance;
@@ -24,50 +25,82 @@ public class GameManager : MonoBehaviour
     public LevelManager LM;
     public float counter = 10;
     public TextMeshProUGUI countertxt;
+    public PhotonView pv;
+    public bool _ismine;
+    public bool _isgamestarted = false;
     void Start()
     {
-        bubbleSequence = new List<Transform>();
-
-       LM.GenerateLevel();
+       
+       
+            
         
-        shootScript.canShoot = true;
-        shootScript.CreateNextBubble();
     }
 
     void Update()
     {
-        if (shootScript.canShoot
-            && Input.GetMouseButtonUp(0)
-            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > shootScript.transform.position.y))
+        if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
-            shootScript.canShoot = false;
-            shootScript.Shoot();
-            counter = 10;
-            countertxt.enabled = false;
+
         }
+        else
+        {
+            return;
+        }
+
+        if (pv == null)
+        {
+            playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
+            foreach (playercontroller p in Listp)
+            {
+                if (p.GetComponent<PhotonView>().IsMine == _ismine && PhotonNetwork.IsMasterClient)
+                {
+                    pv = p.GetComponent<PhotonView>();
+                    print(this.gameObject.name);
+                    bubbleSequence = new List<Transform>();
+
+                    LM.GenerateLevel();
+                    
+                      
+                       
+                        shootScript.canShoot = true;
+                        shootScript.CreateNextBubble();
+
+                        //a
+                    
+                }
+               
+
+            }
+
+            return;
+        }
+        if (!pv.IsMine)
+            return;
+
+       
 
      
     }
 
     private void FixedUpdate()
     {
-        counter -= Time.deltaTime;
-        if (counter > 4 && counter < 5)
-        {
-            countertxt.enabled = true;
-            countertxt.text = "Hurry Yup !";
-        }
-        else if (counter < 4 && counter > 0)
-        {
-            countertxt.text = Mathf.RoundToInt(counter).ToString();
-        }
-        else if (counter <= 0)
-        {
-            shootScript.canShoot = false;
-            shootScript.Shoot();
-            counter = 10;
-            countertxt.enabled = false;
-        }
+        //counter -= Time.deltaTime;
+        //if (counter > 4 && counter < 5)
+        //{
+        //    countertxt.enabled = true;
+        //    countertxt.text = "Hurry Yup !";
+        //}
+        //else if (counter < 4 && counter > 0)
+        //{
+        //    countertxt.text = Mathf.RoundToInt(counter).ToString();
+        //}
+        //else if (counter <= 0)
+        //{
+        //    shootScript.canShoot = false;
+        //    shootScript.Shoot();
+        //    counter = 10;
+        //    countertxt.enabled = false;
+        //}
     }
     public void ProcessTurn(Transform currentBubble)
     {

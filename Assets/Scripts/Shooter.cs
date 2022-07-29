@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Shooter : MonoBehaviour
+public class Shooter : MonoBehaviourPunCallbacks
 {
     public Transform gunSprite;
     public bool canShoot;
@@ -11,17 +12,25 @@ public class Shooter : MonoBehaviour
     public GameObject currentBubble;
     public GameObject nextBubble;
 
-    private Vector2 lookDirection;
-    private float lookAngle;
+    public Vector2 lookDirection;
+    public float lookAngle;
     public bool isSwaping = false;
     public float time = 0.02f;
     public LevelManager Lm;
     public GameManager Gm;
+    public PhotonView pv;
+    public bool _ismine;
     public void Update()
     {
-        lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-        gunSprite.rotation = Quaternion.Euler(0f, 0f, lookAngle - 90f);
+
+        if (pv == null)
+            return;
+            
+        
+        if (!pv.IsMine)
+            return;
+
+       
 
         if(isSwaping)
         {
@@ -48,7 +57,7 @@ public class Shooter : MonoBehaviour
 
     public void Shoot()
     {
-        transform.rotation = Quaternion.Euler(0f, 0f, lookAngle - 90f);
+       
         currentBubble.transform.rotation = transform.rotation;
         currentBubble.GetComponent<Rigidbody2D>().AddForce(currentBubble.transform.up * speed, ForceMode2D.Impulse);
         currentBubble = null;
@@ -70,14 +79,14 @@ public class Shooter : MonoBehaviour
 
         if (nextBubble == null)
         {
-            nextBubble = InstantiateNewBubble(bubblesInScene);
+            nextBubble = InstantiateNewBubble(Lm.bubblesPrefabs);
         }
         else
         {
             if(!colors.Contains(nextBubble.GetComponent<Bubble>().bubbleColor.ToString()))
             {
                 Destroy(nextBubble);
-                nextBubble = InstantiateNewBubble(bubblesInScene);
+                nextBubble = InstantiateNewBubble(Lm.bubblesPrefabs);
             }
         }
 
@@ -85,19 +94,27 @@ public class Shooter : MonoBehaviour
         {
             currentBubble = nextBubble;
             currentBubble.transform.position = new Vector2(transform.position.x, transform.position.y);
-            nextBubble = InstantiateNewBubble(bubblesInScene);
+            nextBubble = InstantiateNewBubble(Lm.bubblesPrefabs);
         }
     }
 
     private GameObject InstantiateNewBubble(List<GameObject> bubblesInScene)
     {
-        GameObject newBubble = Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)]);
+        GameObject newBubble = PhotonNetwork.Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)].name, new Vector3(nextBubblePosition.position.x, nextBubblePosition.position.y,0),Quaternion.identity,0);
         newBubble.transform.position = new Vector2(nextBubblePosition.position.x, nextBubblePosition.position.y);
         newBubble.GetComponent<Bubble>().isFixed = false;
         Rigidbody2D rb2d = newBubble.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
         rb2d.gravityScale = 0f;
         newBubble.GetComponent<Bubble>().Lm = Lm;
         newBubble.GetComponent<Bubble>().Gm = Gm;
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                p.callnewbubble(newBubble.GetComponent<PhotonView>().ViewID);
+            }
+        }
         return newBubble;
     }
 }
