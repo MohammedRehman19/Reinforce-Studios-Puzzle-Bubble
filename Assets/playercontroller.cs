@@ -6,18 +6,23 @@ public class playercontroller : MonoBehaviourPunCallbacks
 {
     public Shooter[] Shooters;
     public Shooter OurShooter;
+    public string Vid;
     // Start is called before the first frame update
     void Start()
     {
-        print(photonView.Controller.ToString()[2]);
+      Vid = photonView.Controller.ToString()[2].ToString();
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach(Shooter S in Shooters)
         {
-            if(S._ismine == photonView.IsMine)
+            if (S._ismine && Vid == "1")
             {
                 OurShooter = S;
                 OurShooter.pv = this.photonView;
-//                callcreateshoot();
+            }
+            else if (!S._ismine && Vid == "2")
+            {
+                OurShooter = S;
+                OurShooter.pv = this.photonView;
             }
         }
     }
@@ -25,20 +30,20 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (photonView.IsMine)
+        if (photonView.IsMine && Vid.Length > 0)
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
             OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
             OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-            photonView.RPC("move", RpcTarget.Others, OurShooter.lookAngle);
+            photonView.RPC("move", RpcTarget.Others,Vid, OurShooter.lookAngle);
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();
-                photonView.RPC("shoot", RpcTarget.Others);
+                photonView.RPC("shoot", RpcTarget.Others,Vid);
                 // counter = 10;
                 //  countertxt.enabled = false;
             }
@@ -58,30 +63,56 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others);
     }
     [PunRPC]
-    void move(float r)
+    void move(string Vid,float r)
     {
+        Shooter tempshooter = null;
+        bool _isFirst = false;
+        if (Vid == "1")
+        {
+            _isFirst = true;
+        }
+        else if(Vid == "2")
+        {
+            _isFirst = false;
+        }
         foreach (Shooter S in Shooters)
         {
-            if (S._ismine == false)
+            if (S._ismine == _isFirst)
             {
-                print("rotatinggg");
-                S.gunSprite.rotation = Quaternion.Euler(0f, 0f, r-90);
-                S.transform.rotation = Quaternion.Euler(0f, 0f, r- 90f);
-            }
-        }      
-    }
-    [PunRPC]
-    void shoot()
-    {
-        foreach (Shooter S in Shooters)
-        {
-            if (S._ismine == false)
-            {
-                print("shooting");
-                S.canShoot = false;
-                S.Shoot();
+                tempshooter = S;
             }
         }
+
+        print("move");
+        tempshooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, r-90);
+        tempshooter.transform.rotation = Quaternion.Euler(0f, 0f, r- 90f);
+             
+    }
+    [PunRPC]
+    void shoot(string Vid)
+    {
+        Shooter tempshooter = null;
+        bool _isFirst = false;
+        if (Vid == "1")
+        {
+            _isFirst = true;
+        }
+        else if (Vid == "2")
+        {
+            _isFirst = false;
+        }
+        foreach (Shooter S in Shooters)
+        {
+            if (S._ismine == _isFirst)
+            {
+                tempshooter = S;
+            }
+        }
+
+        print("shoot");
+        tempshooter.canShoot = false;
+        tempshooter.Shoot();
+        
     }
 
     [PunRPC]
