@@ -28,7 +28,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (photonView.IsMine && Vid.Length > 0)
         {
