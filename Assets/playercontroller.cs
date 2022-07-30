@@ -50,9 +50,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
         //}
 
     }
-    public void callCreatebubble(string Area,float xs, float ys, float zs)
+    public void callCreatebubble(string Area,string BubbleArea,float xs, float ys, float zs)
     {
-        photonView.RPC("createbubble", RpcTarget.Others, Area,xs,ys,zs);
+        photonView.RPC("createbubble", RpcTarget.Others, Area,BubbleArea,xs,ys,zs);
     }
     public void callupdatesnape()
     {
@@ -119,20 +119,22 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void createbubble(string Area,float xs, float ys, float zs)
+    void createbubble(string Area,string BubbleArea,float xs, float ys, float zs)
     {
+      
         GameObject bubble = null;
+        GameObject bubbleArea = GameObject.Find(BubbleArea);
        foreach( var bub in OurShooter.Lm.bubblesPrefabs)
         {
-
-           if(Area.ToLower() == OurShooter.Lm.bubblesPrefabs.ToString().ToLower())
+            
+            if (Area.ToLower() == bub.gameObject.name.ToLower())
             {
                
                 bubble = Instantiate(bub);
-                bubble.transform.SetParent(OurShooter.Lm.bubblesArea);
+                bubble.transform.SetParent(bubbleArea.transform);
                 bubble.transform.position = new Vector3(xs, ys, zs);
-                bubble.GetComponent<Bubble>().Lm = OurShooter.Lm.bubblesArea.GetComponent<BubbleHandler>().Lm;
-                bubble.GetComponent<Bubble>().Gm = OurShooter.Lm.bubblesArea.GetComponent<BubbleHandler>().GM;
+                bubble.GetComponent<Bubble>().Lm = bubbleArea.GetComponent<BubbleHandler>().Lm;
+                bubble.GetComponent<Bubble>().Gm = bubbleArea.GetComponent<BubbleHandler>().GM;
                 bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
                 return;
             }
