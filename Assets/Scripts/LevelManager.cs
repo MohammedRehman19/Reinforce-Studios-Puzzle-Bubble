@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
@@ -45,19 +46,20 @@ public class LevelManager : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            FillWithBubbles(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs);
+           StartCoroutine(FillWithBubbles(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
+
         }
-            SnapChildrensToGrid(bubblesArea);
-            UpdateListOfBubblesInScene();
-            //playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
-            //foreach (playercontroller p in pc)
-            //{
-            //    if (p.GetComponent<PhotonView>().IsMine)
-            //    {
-            //        p.callupdatesnape();
-            //    }
-            //}
-        
+        SnapChildrensToGrid(bubblesArea);
+        UpdateListOfBubblesInScene();
+        //playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        //foreach (playercontroller p in pc)
+        //{
+        //    if (p.GetComponent<PhotonView>().IsMine)
+        //    {
+        //        p.callupdatesnape();
+        //    }
+        //}
+
     }
 
     #region Snap to Grid
@@ -102,25 +104,29 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
 
-    private void FillWithBubbles(GameObject go, List<GameObject> bubbles)
+    private IEnumerator FillWithBubbles(GameObject go, List<GameObject> bubbles)
     {
-        foreach (Transform t in go.transform)
+        int counter = 0;
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        playercontroller pv = null;
+        foreach (playercontroller p in pc)
         {
-            var bubble = PhotonNetwork.Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)].name, bubblesArea.position,Quaternion.identity,0);
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                pv = p;
+           }
+        }
+        while (go.transform.childCount > counter)
+        {
+            var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
             bubble.transform.SetParent(bubblesArea);
-            bubble.transform.position = t.position;
+            bubble.transform.position = go.transform.GetChild(counter).position;
             bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
             bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
-            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
-
-            foreach(playercontroller p in pc)
-            {
-                if (p.GetComponent<PhotonView>().IsMine)
-                {
-                    p.callCreatebubble(bubblesArea.name,bubble.GetComponent<PhotonView>().ViewID,t.position.x,t.position.y,t.position.z);
-                }
-            }
+            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), go.transform.GetChild(counter).position.x, go.transform.GetChild(counter).position.y, go.transform.GetChild(counter).position.z);
+            counter += 1;
+            yield return new WaitForSeconds(0.1f);
         }
 
         Destroy(go);

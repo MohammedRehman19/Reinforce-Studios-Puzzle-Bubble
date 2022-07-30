@@ -100,7 +100,7 @@ public class Shooter : MonoBehaviourPunCallbacks
 
     private GameObject InstantiateNewBubble(List<GameObject> bubblesInScene)
     {
-        GameObject newBubble = PhotonNetwork.Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)].name, new Vector3(nextBubblePosition.position.x, nextBubblePosition.position.y,0),Quaternion.identity,0);
+        GameObject newBubble = Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)]);
         newBubble.transform.position = new Vector2(nextBubblePosition.position.x, nextBubblePosition.position.y);
         newBubble.GetComponent<Bubble>().isFixed = false;
         Rigidbody2D rb2d = newBubble.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
@@ -108,13 +108,13 @@ public class Shooter : MonoBehaviourPunCallbacks
         newBubble.GetComponent<Bubble>().Lm = Lm;
         newBubble.GetComponent<Bubble>().Gm = Gm;
         playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
-        foreach (playercontroller p in pc)
-        {
-            if (p.GetComponent<PhotonView>().IsMine)
-            {
-                p.callnewbubble(newBubble.GetComponent<PhotonView>().ViewID);
-            }
-        }
+        //foreach (playercontroller p in pc)
+        //{
+        //    if (p.GetComponent<PhotonView>().IsMine)
+        //    {
+        //        p.callnewbubble(newBubble.GetComponent<PhotonView>().ViewID);
+        //    }
+        //}
         return newBubble;
     }
 }

@@ -10,9 +10,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-      Vid = photonView.Controller.ToString()[2].ToString();
+        Vid = photonView.Controller.ToString()[2].ToString();
         Shooters = GameObject.FindObjectsOfType<Shooter>();
-        foreach(Shooter S in Shooters)
+        foreach (Shooter S in Shooters)
         {
             if (S._ismine && Vid == "1")
             {
@@ -30,29 +30,29 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (photonView.IsMine && Vid.Length > 0)
-        {
-            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-            OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-            OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-            photonView.RPC("move", RpcTarget.Others,Vid, OurShooter.lookAngle);
-            if (OurShooter.canShoot
-           && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
-            {
-                OurShooter.canShoot = false;
-                OurShooter.Shoot();
-                photonView.RPC("shoot", RpcTarget.Others,Vid);
-                // counter = 10;
-                //  countertxt.enabled = false;
-            }
-        }
+        //if (photonView.IsMine && Vid.Length > 0)
+        //{
+        //    OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        //    OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
+        //    OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+        //    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+        //    photonView.RPC("move", RpcTarget.Others,Vid, OurShooter.lookAngle);
+        //    if (OurShooter.canShoot
+        //   && Input.GetMouseButtonUp(0)
+        //   && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+        //    {
+        //        OurShooter.canShoot = false;
+        //        OurShooter.Shoot();
+        //        photonView.RPC("shoot", RpcTarget.Others,Vid);
+        //        // counter = 10;
+        //        //  countertxt.enabled = false;
+        //    }
+        //}
 
     }
-    public void callCreatebubble(string Area,int id,float xs, float ys, float zs)
+    public void callCreatebubble(string Area,float xs, float ys, float zs)
     {
-        photonView.RPC("createbubble", RpcTarget.Others, Area,id,xs,ys,zs);
+        photonView.RPC("createbubble", RpcTarget.Others, Area,xs,ys,zs);
     }
     public void callupdatesnape()
     {
@@ -119,21 +119,27 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void createbubble(string Area,int bubblenum, float xs, float ys, float zs)
+    void createbubble(string Area,float xs, float ys, float zs)
     {
-      Transform bubblesArea =  GameObject.Find(Area).transform;
-        PhotonView [] ps = GameObject.FindObjectsOfType<PhotonView>();
-        foreach (PhotonView p in ps)
+        GameObject bubble = null;
+       foreach( var bub in OurShooter.Lm.bubblesPrefabs)
         {
-            if (p.ViewID == bubblenum && p.GetComponent<Bubble>() != null)
+
+           if(Area.ToLower() == OurShooter.Lm.bubblesPrefabs.ToString().ToLower())
             {
-                p.transform.SetParent(bubblesArea);
-                p.transform.position = new Vector3(xs,ys,zs);
-                p.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
-                p.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
-                p.GetComponent<Bubble>()._isGameoverLineChecker = true;
+               
+                bubble = Instantiate(bub);
+                bubble.transform.SetParent(OurShooter.Lm.bubblesArea);
+                bubble.transform.position = new Vector3(xs, ys, zs);
+                bubble.GetComponent<Bubble>().Lm = OurShooter.Lm.bubblesArea.GetComponent<BubbleHandler>().Lm;
+                bubble.GetComponent<Bubble>().Gm = OurShooter.Lm.bubblesArea.GetComponent<BubbleHandler>().GM;
+                bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
+                return;
             }
         }
+
+               
+          
     }
 
     [PunRPC]
