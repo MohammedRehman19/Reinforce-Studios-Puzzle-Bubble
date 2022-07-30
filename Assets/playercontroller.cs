@@ -30,25 +30,30 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (photonView.IsMine && Vid.Length > 0)
-        //{
-        //    OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        //    OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-        //    OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-        //    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-        //    photonView.RPC("move", RpcTarget.Others,Vid, OurShooter.lookAngle);
-        //    if (OurShooter.canShoot
-        //   && Input.GetMouseButtonUp(0)
-        //   && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
-        //    {
-        //        OurShooter.canShoot = false;
-        //        OurShooter.Shoot();
-        //        photonView.RPC("shoot", RpcTarget.Others,Vid);
-        //        // counter = 10;
-        //        //  countertxt.enabled = false;
-        //    }
-        //}
+        if (photonView.IsMine && Vid.Length > 0)
+        {
+            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
+            OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+            OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+            photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
+            if (OurShooter.canShoot
+           && Input.GetMouseButtonUp(0)
+           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+            {
+                OurShooter.canShoot = false;
+                OurShooter.Shoot();
+                photonView.RPC("shoot", RpcTarget.Others, Vid);
+                OurShooter.Gm.counter = 10;
+                OurShooter.Gm.countertxt.enabled = false;
+            }
+        }
 
+    }
+
+    public void callshoot()
+    {
+        photonView.RPC("shoot", RpcTarget.Others, Vid);
     }
     public void callCreatebubble(string Area,string BubbleArea,float xs, float ys, float zs)
     {
@@ -58,9 +63,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("updatesnape", RpcTarget.All);
     }
-    public void callcreateshoot()
+    public void callcreateshoot(string _isMine)
     {
-        photonView.RPC("createshoot", RpcTarget.Others);
+        photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
     [PunRPC]
     void move(string Vid,float r)
@@ -84,7 +89,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-            print("move");
+         //   print("move");
             tempshooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, r - 90);
             tempshooter.transform.rotation = Quaternion.Euler(0f, 0f, r - 90f);
         }
@@ -111,9 +116,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-            print("shoot");
+          //  print("shoot");
             tempshooter.canShoot = false;
             tempshooter.Shoot();
+            OurShooter.Gm.counter = 10;
+            OurShooter.Gm.countertxt.enabled = false;
         }
         
     }
@@ -158,16 +165,29 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void createshoot()
+    void createshoot(string _ismine)
     {
+        bool tempmine = false;
+        if(_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach (Shooter S in Shooters)
         {
-            
+            if (S._ismine == tempmine)
+            {
+                S.Gm.bubbleSequence = new List<Transform>();
                 S.canShoot = true;
-                S.CreateNextBubble();
-            
-        
+            }
         }
+               
+             
       
     }
     public void callbubbleSequence()
@@ -185,39 +205,30 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
         }
     }
-    public void callnewbubble(int viewid)
+    public void callnewbubble(string _ismine,string name)
     {
-        photonView.RPC("newbubble", RpcTarget.Others,viewid);
+        photonView.RPC("newbubble", RpcTarget.Others, _ismine,name);
     }
     [PunRPC]
-    void newbubble(int viewid)
+    void newbubble(string _ismine,string name)
     {
-       
-                foreach (Shooter S in Shooters)
-                {
-                   if(S._ismine == false)
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+        foreach (Shooter S in Shooters)
+        {
+            if (S._ismine == tempmine)
             {
-
-                PhotonView[] pv = GameObject.FindObjectsOfType<PhotonView>();
-                foreach (PhotonView pp in pv)
-                {
-
-                    if(pp.ViewID == viewid)
-                    {
-                        pp.transform.position = new Vector2(S.nextBubblePosition.position.x, S.nextBubblePosition.position.y);
-                        pp.GetComponent<Bubble>().isFixed = false;
-                        Rigidbody2D rb2d = pp.gameObject.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
-                        rb2d.gravityScale = 0f;
-                        pp.GetComponent<Bubble>().Lm = S.Lm;
-                        pp.GetComponent<Bubble>().Gm = S.Gm;
-                    }
-
-                }
-
-                 
+                S.CreateNextBubbleClo(name);
             }
-                }
-               
-            
+        }
     }
 }

@@ -21,7 +21,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
 
     private int sequenceSize = 3;
     [SerializeField]
-    private List<Transform> bubbleSequence;
+    public List<Transform> bubbleSequence;
     public LevelManager LM;
     public float counter = 10;
     public TextMeshProUGUI countertxt;
@@ -59,12 +59,13 @@ public class InGameManager : MonoBehaviourPunCallbacks
                     bubbleSequence = new List<Transform>();
 
                     LM.GenerateLevel();
-                    
-                      
-                       
-                        shootScript.canShoot = true;
-                        shootScript.CreateNextBubble();
 
+
+
+                    shootScript.canShoot = true;
+                    p.callcreateshoot(_ismine.ToString());
+                     shootScript.CreateNextBubble();
+                   
                         //a
                     
                 }
@@ -84,23 +85,31 @@ public class InGameManager : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        //counter -= Time.deltaTime;
-        //if (counter > 4 && counter < 5)
-        //{
-        //    countertxt.enabled = true;
-        //    countertxt.text = "Hurry Yup !";
-        //}
-        //else if (counter < 4 && counter > 0)
-        //{
-        //    countertxt.text = Mathf.RoundToInt(counter).ToString();
-        //}
-        //else if (counter <= 0)
-        //{
-        //    shootScript.canShoot = false;
-        //    shootScript.Shoot();
-        //    counter = 10;
-        //    countertxt.enabled = false;
-        //}
+      /*  counter -= Time.deltaTime;
+        if (counter > 4 && counter < 5)
+        {
+            countertxt.enabled = true;
+            countertxt.text = "Hurry Yup !";
+        }
+        else if (counter < 4 && counter > 0)
+        {
+            countertxt.text = Mathf.RoundToInt(counter).ToString();
+        }
+        else if (counter <= 0)
+        {
+            shootScript.canShoot = false;
+            shootScript.Shoot();
+            counter = 10;
+            countertxt.enabled = false;
+            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+            foreach (playercontroller p in pc)
+            {
+                if (p.GetComponent<PhotonView>().IsMine)
+                {
+                    p.callshoot();
+                }
+            }
+        }*/
     }
     public void ProcessTurn(Transform currentBubble)
     {
