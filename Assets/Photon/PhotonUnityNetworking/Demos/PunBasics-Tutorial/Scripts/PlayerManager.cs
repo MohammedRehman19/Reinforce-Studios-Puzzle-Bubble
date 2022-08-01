@@ -130,7 +130,7 @@ namespace Photon.Pun.Demo.PunBasics
         /// </summary>
         public void Update()
         {
-            // we only process Inputs and check health if we are the local player
+           /* // we only process Inputs and check health if we are the local player
             if (photonView.IsMine)
             {
                 this.ProcessInputs();
@@ -144,7 +144,7 @@ namespace Photon.Pun.Demo.PunBasics
             if (this.beams != null && this.IsFiring != this.beams.activeInHierarchy)
             {
                 this.beams.SetActive(this.IsFiring);
-            }
+            }*/
         }
 
         /// <summary>

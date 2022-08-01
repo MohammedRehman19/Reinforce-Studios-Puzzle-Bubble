@@ -6,7 +6,7 @@ public class BubbleHandler : MonoBehaviour
 {
 
     public LevelManager Lm;
-    public GameManager GM;
+    public InGameManager GM;
     // Start is called before the first frame update
     void Start()
     {

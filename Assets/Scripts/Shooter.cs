@@ -17,7 +17,7 @@ public class Shooter : MonoBehaviourPunCallbacks
     public bool isSwaping = false;
     public float time = 0.02f;
     public LevelManager Lm;
-    public GameManager Gm;
+    public InGameManager Gm;
     public PhotonView pv;
     public bool _ismine;
     public void Update()
@@ -25,16 +25,16 @@ public class Shooter : MonoBehaviourPunCallbacks
 
         if (pv == null)
             return;
-            
-        
+
+
         if (!pv.IsMine)
             return;
 
-       
 
-        if(isSwaping)
+
+        if (isSwaping)
         {
-            if(Vector2.Distance(currentBubble.transform.position, nextBubblePosition.position) <= 0.2f
+            if (Vector2.Distance(currentBubble.transform.position, nextBubblePosition.position) <= 0.2f
                 && Vector2.Distance(nextBubble.transform.position, transform.position) <= 0.2f)
             {
                 nextBubble.transform.position = transform.position;
@@ -57,7 +57,7 @@ public class Shooter : MonoBehaviourPunCallbacks
 
     public void Shoot()
     {
-       
+
         currentBubble.transform.rotation = transform.rotation;
         currentBubble.GetComponent<Rigidbody2D>().AddForce(currentBubble.transform.up * speed, ForceMode2D.Impulse);
         currentBubble = null;
@@ -75,7 +75,7 @@ public class Shooter : MonoBehaviourPunCallbacks
     public void CreateNextBubble()
     {
         List<GameObject> bubblesInScene = Lm.bubblesInScene;
-        List<string> colors =Lm.colorsInScene;
+        List<string> colors = Lm.colorsInScene;
 
         if (nextBubble == null)
         {
@@ -83,24 +83,48 @@ public class Shooter : MonoBehaviourPunCallbacks
         }
         else
         {
-            if(!colors.Contains(nextBubble.GetComponent<Bubble>().bubbleColor.ToString()))
+            if (!colors.Contains(nextBubble.GetComponent<Bubble>().bubbleColor.ToString()))
             {
                 Destroy(nextBubble);
                 nextBubble = InstantiateNewBubble(Lm.bubblesPrefabs);
             }
         }
 
-        if(currentBubble == null)
+        if (currentBubble == null)
         {
             currentBubble = nextBubble;
             currentBubble.transform.position = new Vector2(transform.position.x, transform.position.y);
             nextBubble = InstantiateNewBubble(Lm.bubblesPrefabs);
         }
     }
+    public void CreateNextBubbleClo(string name)
+    {
+        List<GameObject> bubblesInScene = Lm.bubblesInScene;
+        List<string> colors = Lm.colorsInScene;
 
+        if (nextBubble == null)
+        {
+            nextBubble = InstantiateNewBubbleClo(name);
+        }
+        else
+        {
+            if (!colors.Contains(nextBubble.GetComponent<Bubble>().bubbleColor.ToString()))
+            {
+                Destroy(nextBubble);
+                nextBubble = InstantiateNewBubbleClo(name);
+            }
+        }
+
+        if (currentBubble == null)
+        {
+            currentBubble = nextBubble;
+            currentBubble.transform.position = new Vector2(transform.position.x, transform.position.y);
+            nextBubble = InstantiateNewBubbleClo(name);
+        }
+    }
     private GameObject InstantiateNewBubble(List<GameObject> bubblesInScene)
     {
-        GameObject newBubble = PhotonNetwork.Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)].name, new Vector3(nextBubblePosition.position.x, nextBubblePosition.position.y,0),Quaternion.identity,0);
+        GameObject newBubble = Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)]);
         newBubble.transform.position = new Vector2(nextBubblePosition.position.x, nextBubblePosition.position.y);
         newBubble.GetComponent<Bubble>().isFixed = false;
         Rigidbody2D rb2d = newBubble.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
@@ -108,13 +132,37 @@ public class Shooter : MonoBehaviourPunCallbacks
         newBubble.GetComponent<Bubble>().Lm = Lm;
         newBubble.GetComponent<Bubble>().Gm = Gm;
         playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
-        foreach (playercontroller p in pc)
+        foreach(playercontroller p in pc)
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
-                p.callnewbubble(newBubble.GetComponent<PhotonView>().ViewID);
+                print(_ismine);
+                p.callnewbubble(_ismine.ToString(),newBubble.GetComponent<Bubble>().bubbleColor.ToString());
             }
         }
+        return newBubble;
+    }
+
+    private GameObject InstantiateNewBubbleClo(string Shoootername)
+    {
+
+        GameObject bubbleclo = null;
+        foreach (var bub in Lm.bubblesPrefabs)
+        {
+
+            if (Shoootername.ToLower() == bub.gameObject.name.ToLower())
+            {
+                bubbleclo = bub;
+            }
+        }
+
+                GameObject newBubble = Instantiate(bubbleclo);
+        newBubble.transform.position = new Vector2(nextBubblePosition.position.x, nextBubblePosition.position.y);
+        newBubble.GetComponent<Bubble>().isFixed = false;
+        Rigidbody2D rb2d = newBubble.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
+        rb2d.gravityScale = 0f;
+        newBubble.GetComponent<Bubble>().Lm = Lm;
+        newBubble.GetComponent<Bubble>().Gm = Gm;
         return newBubble;
     }
 }

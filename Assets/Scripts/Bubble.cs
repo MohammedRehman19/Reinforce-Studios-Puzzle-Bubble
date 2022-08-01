@@ -12,7 +12,7 @@ public class Bubble : MonoBehaviour
 
     public BubbleColor bubbleColor;
     public LevelManager Lm;
-    public GameManager Gm;
+    public InGameManager Gm;
     public bool _isGameoverLineChecker = false;
 
     private void Start()

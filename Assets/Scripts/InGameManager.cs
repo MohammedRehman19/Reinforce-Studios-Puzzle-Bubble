@@ -2,7 +2,7 @@
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
-public class GameManager : MonoBehaviourPunCallbacks
+public class InGameManager : MonoBehaviourPunCallbacks
 {
   /*  #region Singleton
     public static GameManager instance;
@@ -52,30 +52,22 @@ public class GameManager : MonoBehaviourPunCallbacks
             playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
             foreach (playercontroller p in Listp)
             {
-                if (p.GetComponent<PhotonView>().IsMine == _ismine )
+                if (p.GetComponent<PhotonView>().IsMine == _ismine && PhotonNetwork.IsMasterClient && p.OurShooter != null)
                 {
                     pv = p.GetComponent<PhotonView>();
                  //   print(this.gameObject.name);
                     bubbleSequence = new List<Transform>();
-                   /* playercontroller[] pp = GameObject.FindObjectsOfType<playercontroller>();
-                    foreach (playercontroller pps in Listp)
-                    {
-                        pps.callbubbleSequence();
-                    }*/
-                        LM.GenerateLevel();
+
+                    LM.GenerateLevel();
+
+
+
                     shootScript.canShoot = true;
-                    shootScript.CreateNextBubble();
-                    /* foreach (playercontroller pps in Listp)
-                     {
-                         pps.callcreateshoot();
-                     }
- */
-
-
-
-
-                    //a
-
+                    p.callcreateshoot(_ismine.ToString());
+                     shootScript.CreateNextBubble();
+                   
+                        //a
+                    
                 }
                
 
@@ -93,23 +85,31 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        //counter -= Time.deltaTime;
-        //if (counter > 4 && counter < 5)
-        //{
-        //    countertxt.enabled = true;
-        //    countertxt.text = "Hurry Yup !";
-        //}
-        //else if (counter < 4 && counter > 0)
-        //{
-        //    countertxt.text = Mathf.RoundToInt(counter).ToString();
-        //}
-        //else if (counter <= 0)
-        //{
-        //    shootScript.canShoot = false;
-        //    shootScript.Shoot();
-        //    counter = 10;
-        //    countertxt.enabled = false;
-        //}
+      /*  counter -= Time.deltaTime;
+        if (counter > 4 && counter < 5)
+        {
+            countertxt.enabled = true;
+            countertxt.text = "Hurry Yup !";
+        }
+        else if (counter < 4 && counter > 0)
+        {
+            countertxt.text = Mathf.RoundToInt(counter).ToString();
+        }
+        else if (counter <= 0)
+        {
+            shootScript.canShoot = false;
+            shootScript.Shoot();
+            counter = 10;
+            countertxt.enabled = false;
+            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+            foreach (playercontroller p in pc)
+            {
+                if (p.GetComponent<PhotonView>().IsMine)
+                {
+                    p.callshoot();
+                }
+            }
+        }*/
     }
     public void ProcessTurn(Transform currentBubble)
     {
