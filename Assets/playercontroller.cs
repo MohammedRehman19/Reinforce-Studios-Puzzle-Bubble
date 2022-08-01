@@ -6,20 +6,20 @@ public class playercontroller : MonoBehaviourPunCallbacks
 {
     public Shooter[] Shooters;
     public Shooter OurShooter;
-    public string Vid;
+    public int Vid;
     // Start is called before the first frame update
     void Start()
     {
-        Vid = photonView.Controller.ToString()[2].ToString();
+        Vid = int.Parse(photonView.Controller.ToString()[2].ToString());
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach (Shooter S in Shooters)
         {
-            if (S._ismine && Vid == "1")
+            if (S._ismine && Vid == 1)
             {
                 OurShooter = S;
                 OurShooter.pv = this.photonView;
             }
-            else if (!S._ismine && Vid == "2")
+            else if (!S._ismine && Vid > 1)
             {
                 OurShooter = S;
                 OurShooter.pv = this.photonView;
@@ -30,7 +30,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (photonView.IsMine && Vid.Length > 0)
+        if (photonView.IsMine )
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
@@ -51,9 +51,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
     }
 
-    public void callshoot()
+    public void callshoot(int vidd)
     {
-        photonView.RPC("shoot", RpcTarget.Others, Vid);
+        photonView.RPC("shoot", RpcTarget.Others, vidd);
     }
     public void callCreatebubble(string Area,string BubbleArea,float xs, float ys, float zs)
     {
@@ -68,15 +68,15 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
     [PunRPC]
-    void move(string Vid,float r)
+    void move(int Vid,float r)
     {
         Shooter tempshooter = null;
         bool _isFirst = false;
-        if (Vid == "1")
+        if (Vid == 1)
         {
             _isFirst = true;
         }
-        else if(Vid == "2")
+        else if(Vid > 1)
         {
             _isFirst = false;
         }
@@ -95,15 +95,15 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
     }
     [PunRPC]
-    void shoot(string Vid)
+    void shoot(int Vid)
     {
         Shooter tempshooter = null;
         bool _isFirst = false;
-        if (Vid == "1")
+        if (Vid == 1)
         {
             _isFirst = true;
         }
-        else if (Vid == "2")
+        else if (Vid > 1)
         {
             _isFirst = false;
         }
