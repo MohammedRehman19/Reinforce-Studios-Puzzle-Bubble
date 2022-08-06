@@ -33,14 +33,6 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-       
-
-      
-
-    }
-    private void Update()
-    {
-
         if (photonView.IsMine && OurShooter.Gm._isgamestarted)
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
@@ -48,6 +40,16 @@ public class playercontroller : MonoBehaviourPunCallbacks
             to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
             /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
+        }
+
+
+    }
+    private void Update()
+    {
+
+        if (photonView.IsMine && OurShooter.Gm._isgamestarted)
+        {
+         
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
