@@ -40,16 +40,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
             to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
         /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
-            if (OurShooter.canShoot
-           && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
-            {
-                OurShooter.canShoot = false;
-                OurShooter.Shoot();
-                photonView.RPC("shoot", RpcTarget.Others, Vid);
-                OurShooter.Gm.counter = 10;
-                OurShooter.Gm.countertxt.enabled = false;
-            }
+           
         }
 
       
@@ -57,6 +48,19 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+
+        if (OurShooter.canShoot
+          && Input.GetMouseButtonUp(0)
+          && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+        {
+            OurShooter.canShoot = false;
+            OurShooter.Shoot();
+            photonView.RPC("shoot", RpcTarget.Others, Vid);
+            OurShooter.Gm.counter = 10;
+            OurShooter.Gm.countertxt.enabled = false;
+        }
+
+
         Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
         OurShooter.transform.rotation = Quaternion.Lerp(from,to, timeCount * speed);
         OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
