@@ -40,7 +40,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
-
+            Invoke("startGame",2);
         }
         else
         {
@@ -52,7 +52,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
             playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
             foreach (playercontroller p in Listp)
             {
-                if (p.GetComponent<PhotonView>().IsMine == _ismine && PhotonNetwork.IsMasterClient && p.OurShooter != null)
+                if (p.GetComponent<PhotonView>().IsMine == _ismine && PhotonNetwork.IsMasterClient && p.OurShooter != null && _isgamestarted)
                 {
                     pv = p.GetComponent<PhotonView>();
                  //   print(this.gameObject.name);
@@ -82,7 +82,10 @@ public class InGameManager : MonoBehaviourPunCallbacks
 
      
     }
-
+     public void startGame()
+    {
+        _isgamestarted = true;
+    }
     private void FixedUpdate()
     {
       /*  counter -= Time.deltaTime;
