@@ -40,18 +40,17 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        if (photonView.IsMine)
+
+        if (photonView.IsMine && OurShooter.Gm._isgamestarted)
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
             to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
             /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
-
-
             if (OurShooter.canShoot
-              && Input.GetMouseButtonUp(0)
-              && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+           && Input.GetMouseButtonUp(0)
+           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();
@@ -60,6 +59,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 OurShooter.Gm.countertxt.enabled = false;
             }
         }
+
 
         Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
         OurShooter.transform.rotation = Quaternion.Lerp(from,to, timeCount * speed);
