@@ -7,6 +7,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
     public Shooter[] Shooters;
     public Shooter OurShooter;
     public int Vid;
+    Quaternion to;
+    float speed = 0.01f;
+    float timeCount = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +33,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (photonView.IsMine )
+        if (photonView.IsMine)
         {
-            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-            OurShooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
-            OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+            to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+        /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
@@ -49,8 +52,16 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
         }
 
-    }
+      
 
+    }
+    private void Update()
+    {
+        Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
+        OurShooter.transform.rotation = Quaternion.Lerp(from,to, timeCount * speed);
+        OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+        timeCount = timeCount + Time.deltaTime;
+    }
     public void callshoot(int vidd)
     {
         photonView.RPC("shoot", RpcTarget.Others, vidd);
@@ -90,8 +101,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
         if (tempshooter != null)
         {
          //   print("move");
-            tempshooter.gunSprite.rotation = Quaternion.Euler(0f, 0f, r - 90);
-            tempshooter.transform.rotation = Quaternion.Euler(0f, 0f, r - 90f);
+           to = Quaternion.Euler(0f, 0f, r - 90);
+           
         }
     }
     [PunRPC]
