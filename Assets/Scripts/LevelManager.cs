@@ -47,7 +47,7 @@ public class LevelManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
            StartCoroutine(FillWithBubbles(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
-            StartCoroutine(FillWithBubblesNewLine(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
+           // StartCoroutine(FillWithBubblesNewLine(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
         }
         SnapChildrensToGrid(bubblesArea);
         UpdateListOfBubblesInScene();
@@ -118,7 +118,7 @@ public class LevelManager : MonoBehaviour
                 pv = p;
             }
         }
-        while (bubblesArea.transform.childCount > bubbles.Count)
+        while (counter > bubbles.Count)
         {
             var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
             print(bubble.gameObject.name);
@@ -158,7 +158,7 @@ public class LevelManager : MonoBehaviour
             bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
             bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
-            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(),bubblesArea.name, go.transform.GetChild(counter).position.x, go.transform.GetChild(counter).position.y, go.transform.GetChild(counter).position.z);
+            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(),bubblesArea.name, go.transform.GetChild(counter).localPosition.x, go.transform.GetChild(counter).localPosition.y, go.transform.GetChild(counter).localPosition.z);
             counter += 1;
             yield return new WaitForSeconds(0.1f);
         }
