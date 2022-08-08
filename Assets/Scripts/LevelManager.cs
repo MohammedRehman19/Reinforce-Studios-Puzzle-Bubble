@@ -86,7 +86,7 @@ public class LevelManager : MonoBehaviour
         OffsetBubblesInScene();
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
         StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
-        StartCoroutine(newLine, bubblesPrefabs));
+        StartCoroutine(FillWithBubblesNewLine(newLine, bubblesPrefabs));
         SnapChildrensToGrid(bubblesArea);
         lastLineIsLeft = !lastLineIsLeft;
     }
