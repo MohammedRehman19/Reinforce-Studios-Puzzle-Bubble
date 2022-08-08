@@ -104,6 +104,37 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
 
+
+    private IEnumerator FillWithBubblesNewLine(GameObject go, List<GameObject> bubbles)
+    {
+        int counter = 0;
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        playercontroller pv = null;
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                pv = p;
+            }
+        }
+        while (go.transform.childCount > bubbles.Count)
+        {
+            var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
+            print(bubble.gameObject.name);
+            bubble.transform.SetParent(bubblesArea);
+            bubble.transform.localPosition = go.transform.GetChild(counter).localPosition;
+            print(bubble.gameObject.name +" = "+bubble.transform.localPosition);
+            bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
+            bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
+            bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
+            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), bubblesArea.name, go.transform.GetChild(counter).position.x, go.transform.GetChild(counter).position.y, go.transform.GetChild(counter).position.z);
+            counter += 1;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //  Destroy(go);
+    }
+
     private IEnumerator FillWithBubbles(GameObject go, List<GameObject> bubbles)
     {
         int counter = 0;
