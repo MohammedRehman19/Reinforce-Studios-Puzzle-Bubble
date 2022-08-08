@@ -156,7 +156,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                
                 bubble = Instantiate(bub);
                 bubble.transform.SetParent(bubbleArea.transform);
-                bubble.transform.position = new Vector3(xs, ys, zs);
+                bubble.transform.localPosition = new Vector3(xs, ys, zs);
                 bubble.GetComponent<Bubble>().Lm = bubbleArea.GetComponent<BubbleHandler>().Lm;
                 bubble.GetComponent<Bubble>().Gm = bubbleArea.GetComponent<BubbleHandler>().GM;
                 bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
