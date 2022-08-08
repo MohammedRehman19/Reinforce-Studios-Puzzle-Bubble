@@ -82,6 +82,27 @@ public class LevelManager : MonoBehaviour
     [ContextMenu("AddLine")]
     public void AddNewLine()
     {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            MasterCallNewLine();
+        }
+        else
+        {
+            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+            playercontroller pv = null;
+            foreach (playercontroller p in pc)
+            {
+                if (p.GetComponent<PhotonView>().IsMine)
+                {
+                    pv = p;
+                    pv.callonMasternewLine();
+                }
+            }
+        }
+    }
+
+  public void MasterCallNewLine()
+    {
         OffsetGrid();
         OffsetBubblesInScene();
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);

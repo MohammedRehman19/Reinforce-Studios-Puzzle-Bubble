@@ -49,7 +49,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-         
+
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
@@ -64,7 +64,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
 
         Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
-        OurShooter.transform.rotation = Quaternion.Lerp(from,to, timeCount * speed);
+        OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
         OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
         timeCount = timeCount + Time.deltaTime;
     }
@@ -72,9 +72,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("shoot", RpcTarget.Others, vidd);
     }
-    public void callCreatebubble(string Area,string BubbleArea,float xs, float ys, float zs)
+    public void callCreatebubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
-        photonView.RPC("createbubble", RpcTarget.Others, Area,BubbleArea,xs,ys,zs);
+        photonView.RPC("createbubble", RpcTarget.Others, Area, BubbleArea, xs, ys, zs);
     }
     public void callupdatesnape()
     {
@@ -85,7 +85,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
     [PunRPC]
-    void move(int Vid,float r)
+    void move(int Vid, float r)
     {
         Shooter tempshooter = null;
         bool _isFirst = false;
@@ -93,7 +93,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             _isFirst = true;
         }
-        else if(Vid > 1)
+        else if (Vid > 1)
         {
             _isFirst = false;
         }
@@ -106,9 +106,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-         //   print("move");
-           to = Quaternion.Euler(0f, 0f, r - 90);
-           
+            //   print("move");
+            to = Quaternion.Euler(0f, 0f, r - 90);
+
         }
     }
     [PunRPC]
@@ -133,27 +133,27 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-          //  print("shoot");
+            //  print("shoot");
             tempshooter.canShoot = false;
             tempshooter.Shoot();
             OurShooter.Gm.counter = 10;
             OurShooter.Gm.countertxt.enabled = false;
         }
-        
+
     }
 
     [PunRPC]
-    void createbubble(string Area,string BubbleArea,float xs, float ys, float zs)
+    void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
-      
+
         GameObject bubble = null;
         GameObject bubbleArea = GameObject.Find(BubbleArea);
-       foreach( var bub in OurShooter.Lm.bubblesPrefabs)
+        foreach (var bub in OurShooter.Lm.bubblesPrefabs)
         {
-            
+
             if (Area.ToLower() == bub.gameObject.name.ToLower())
             {
-               
+
                 bubble = Instantiate(bub);
                 bubble.transform.SetParent(bubbleArea.transform);
                 bubble.transform.localPosition = new Vector3(xs, ys, zs);
@@ -164,20 +164,20 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
         }
 
-               
-          
+
+
     }
 
     [PunRPC]
     void updatesnape()
     {
-        
+
         foreach (Shooter S in Shooters)
         {
-            
-                S.Lm.SnapChildrensToGrid(S.Lm.bubblesArea);
-                S.Lm.UpdateListOfBubblesInScene();
-            
+
+            S.Lm.SnapChildrensToGrid(S.Lm.bubblesArea);
+            S.Lm.UpdateListOfBubblesInScene();
+
         }
     }
 
@@ -185,7 +185,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     void createshoot(string _ismine)
     {
         bool tempmine = false;
-        if(_ismine.ToLower() == "true")
+        if (_ismine.ToLower() == "true")
         {
             tempmine = true;
         }
@@ -203,9 +203,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 S.canShoot = true;
             }
         }
-               
-             
-      
+
+
+
     }
     public void callbubbleSequence()
     {
@@ -216,18 +216,18 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         foreach (Shooter S in Shooters)
         {
-            
-//                S.Gm.bubbleSequence = new List<Transform>();
-            
+
+            //                S.Gm.bubbleSequence = new List<Transform>();
+
 
         }
     }
-    public void callnewbubble(string _ismine,string name)
+    public void callnewbubble(string _ismine, string name)
     {
-        photonView.RPC("newbubble", RpcTarget.Others, _ismine,name);
+        photonView.RPC("newbubble", RpcTarget.Others, _ismine, name);
     }
     [PunRPC]
-    void newbubble(string _ismine,string name)
+    void newbubble(string _ismine, string name)
     {
         bool tempmine = false;
         if (_ismine.ToLower() == "true")
@@ -238,7 +238,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             tempmine = false;
         }
-//        print(tempmine +" = aaa");
+        //        print(tempmine +" = aaa");
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach (Shooter S in Shooters)
         {
@@ -271,6 +271,34 @@ public class playercontroller : MonoBehaviourPunCallbacks
             if (S._ismine == tempmine)
             {
                 S.Gm.callfromMaster();
+            }
+        }
+    }
+    public void callonMasternewLine()
+    {
+        photonView.RPC("onMasterNewLine", RpcTarget.MasterClient);
+    }
+
+
+    [PunRPC]
+    void onMasterNewLine(string _ismine)
+    {
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        //        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+        foreach (Shooter S in Shooters)
+        {
+            if (S._ismine == tempmine)
+            {
+                S.Lm.MasterCallNewLine();
             }
         }
     }
