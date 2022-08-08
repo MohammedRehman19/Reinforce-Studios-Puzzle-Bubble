@@ -47,7 +47,7 @@ public class LevelManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
            StartCoroutine(FillWithBubbles(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
-
+            StartCoroutine(FillWithBubblesNewLine(GameObject.FindGameObjectWithTag(playerTag), bubblesPrefabs));
         }
         SnapChildrensToGrid(bubblesArea);
         UpdateListOfBubblesInScene();
@@ -85,7 +85,8 @@ public class LevelManager : MonoBehaviour
         OffsetGrid();
         OffsetBubblesInScene();
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
-       StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
+        StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
+        StartCoroutine(newLine, bubblesPrefabs));
         SnapChildrensToGrid(bubblesArea);
         lastLineIsLeft = !lastLineIsLeft;
     }
@@ -117,17 +118,17 @@ public class LevelManager : MonoBehaviour
                 pv = p;
             }
         }
-        while (go.transform.childCount > bubbles.Count)
+        while (bubblesArea.transform.childCount > bubbles.Count)
         {
             var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
             print(bubble.gameObject.name);
             bubble.transform.SetParent(bubblesArea);
-            bubble.transform.localPosition = go.transform.GetChild(counter).localPosition;
+            bubble.transform.localPosition = bubblesArea.transform.GetChild(counter).localPosition;
             print(bubble.gameObject.name +" = "+bubble.transform.localPosition);
             bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
             bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
-            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), bubblesArea.name, go.transform.GetChild(counter).position.x, go.transform.GetChild(counter).position.y, go.transform.GetChild(counter).position.z);
+            pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), bubblesArea.name, bubblesArea.transform.GetChild(counter).position.x, bubblesArea.transform.GetChild(counter).position.y, bubblesArea.transform.GetChild(counter).position.z);
             counter += 1;
             yield return new WaitForSeconds(0.1f);
         }
