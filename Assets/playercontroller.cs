@@ -238,13 +238,39 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             tempmine = false;
         }
-        print(tempmine +" = aaa");
+//        print(tempmine +" = aaa");
         Shooters = GameObject.FindObjectsOfType<Shooter>();
         foreach (Shooter S in Shooters)
         {
             if (S._ismine == tempmine)
             {
                 S.CreateNextBubbleClo(name);
+            }
+        }
+    }
+    public void callonMaster(string _ismine)
+    {
+        photonView.RPC("onMaster", RpcTarget.MasterClient, _ismine);
+    }
+    [PunRPC]
+    void onMaster(string _ismine)
+    {
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        //        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+        foreach (Shooter S in Shooters)
+        {
+            if (S._ismine == tempmine)
+            {
+                S.Gm.callfromMaster();
             }
         }
     }

@@ -126,9 +126,30 @@ public class InGameManager : MonoBehaviourPunCallbacks
         }
 
        LM.UpdateListOfBubblesInScene();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            callfromMaster();
+        }
+        else
+        {
+            playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
+            foreach (playercontroller p in Listp)
+            {
+                p.callonMaster(_ismine.ToString());
+            }
+        }
 
+    }
+
+    public void callfromMaster()
+    {
         shootScript.CreateNextBubble();
         shootScript.canShoot = true;
+        playercontroller[] Listp = GameObject.FindObjectsOfType<playercontroller>();
+        foreach (playercontroller p in Listp)
+        {
+            p.callcreateshoot(_ismine.ToString());
+        }
     }
 
     private void CheckBubbleSequence(Transform currentBubble)
