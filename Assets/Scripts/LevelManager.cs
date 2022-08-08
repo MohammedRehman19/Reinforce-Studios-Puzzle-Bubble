@@ -85,7 +85,7 @@ public class LevelManager : MonoBehaviour
         OffsetGrid();
         OffsetBubblesInScene();
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
-        FillWithBubbles(newLine, bubblesPrefabs);
+       StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
         SnapChildrensToGrid(bubblesArea);
         lastLineIsLeft = !lastLineIsLeft;
     }
@@ -119,8 +119,10 @@ public class LevelManager : MonoBehaviour
         while (go.transform.childCount > counter)
         {
             var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
+            print(bubble.gameObject.name);
             bubble.transform.SetParent(bubblesArea);
-            bubble.transform.position = go.transform.GetChild(counter).position;
+            bubble.transform.localPosition = go.transform.GetChild(counter).localPosition;
+            
             bubble.GetComponent<Bubble>().Lm = bubblesArea.GetComponent<BubbleHandler>().Lm;
             bubble.GetComponent<Bubble>().Gm = bubblesArea.GetComponent<BubbleHandler>().GM;
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
