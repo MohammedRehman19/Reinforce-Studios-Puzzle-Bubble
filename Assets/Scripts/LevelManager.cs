@@ -131,7 +131,7 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        Destroy(go);
+      //  Destroy(go);
     }
 
     public void UpdateListOfBubblesInScene()
