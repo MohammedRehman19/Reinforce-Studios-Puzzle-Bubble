@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            MasterCallNewLine();
+            allmastercallinonce();
         }
         else
         {
@@ -101,13 +101,31 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void allmastercallinonce()
+    {
+
+        MasterCallBeforeNewLine();
+        MasterCallNewLine();
+        MasterCallAfterNewLine();
+    }
+
   public void MasterCallNewLine()
     {
-        OffsetGrid();
-        OffsetBubblesInScene();
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
         StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
         StartCoroutine(FillWithBubblesNewLine(newLine, bubblesPrefabs));
+    }
+  public void MasterCallBeforeNewLine()
+    {
+        OffsetGrid();
+        OffsetBubblesInScene();
+
+        
+    }
+
+    public void MasterCallAfterNewLine()
+    {
+        
         SnapChildrensToGrid(bubblesArea);
         lastLineIsLeft = !lastLineIsLeft;
     }

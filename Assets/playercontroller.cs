@@ -298,7 +298,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (S._ismine == tempmine)
             {
-                S.Lm.MasterCallNewLine();
+                S.Lm.MasterCallAfterNewLine();
+                S.Lm.MasterCallBeforeNewLine();
             }
         }
     }
