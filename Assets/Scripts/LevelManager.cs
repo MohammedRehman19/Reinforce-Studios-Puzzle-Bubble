@@ -88,6 +88,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
+            
             playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
             playercontroller pv = null;
             foreach (playercontroller p in pc)
@@ -107,6 +108,14 @@ public class LevelManager : MonoBehaviour
         MasterCallBeforeNewLine();
         MasterCallNewLine();
         MasterCallAfterNewLine();
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                pv = p;
+                pv.callonMasternewLine();
+            }
+        }
     }
 
   public void MasterCallNewLine()
