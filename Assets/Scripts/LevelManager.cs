@@ -108,6 +108,9 @@ public class LevelManager : MonoBehaviour
         MasterCallBeforeNewLine();
         MasterCallNewLine();
         MasterCallAfterNewLine();
+
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        playercontroller pv = null;
         foreach (playercontroller p in pc)
         {
             if (p.GetComponent<PhotonView>().IsMine)
