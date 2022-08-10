@@ -37,9 +37,9 @@ namespace Photon.Pun.Demo.PunBasics
 		[SerializeField]
 		private byte maxPlayersPerRoom = 4;
 
-		[Tooltip("The UI Loader Anime")]
+		/*[Tooltip("The UI Loader Anime")]
 		[SerializeField]
-		private LoaderAnime loaderAnime;
+		private LoaderAnime loaderAnime;*/
 
 		#endregion
 
@@ -65,10 +65,10 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 		void Awake()
 		{
-			if (loaderAnime==null)
+			/*if (loaderAnime==null)
 			{
 				Debug.LogError("<Color=Red><b>Missing</b></Color> loaderAnime Reference.",this);
-			}
+			}*/
 
 			// #Critical
 			// this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
@@ -98,10 +98,10 @@ namespace Photon.Pun.Demo.PunBasics
 			controlPanel.SetActive(false);
 
 			// start the loader animation for visual effect.
-			if (loaderAnime!=null)
+			/*if (loaderAnime!=null)
 			{
 				loaderAnime.StartLoaderAnimation();
-			}
+			}*/
 
 			// we check if we are connected or not, we join if we are , else we initiate the connection to the server.
 			if (PhotonNetwork.IsConnected)
@@ -185,7 +185,7 @@ namespace Photon.Pun.Demo.PunBasics
 			Debug.LogError("PUN Basics Tutorial/Launcher:Disconnected");
 
 			// #Critical: we failed to connect or got disconnected. There is not much we can do. Typically, a UI system should be in place to let the user attemp to connect again.
-			loaderAnime.StopLoaderAnimation();
+		//	loaderAnime.StopLoaderAnimation();
 
 			isConnecting = false;
 			controlPanel.SetActive(true);
