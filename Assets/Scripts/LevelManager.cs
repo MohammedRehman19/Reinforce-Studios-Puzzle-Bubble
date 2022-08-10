@@ -86,20 +86,7 @@ public class LevelManager : MonoBehaviour
         {
             allmastercallinonce();
         }
-        else
-        {
-            
-            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
-            playercontroller pv = null;
-            foreach (playercontroller p in pc)
-            {
-                if (p.GetComponent<PhotonView>().IsMine)
-                {
-                    pv = p;
-                    pv.callonMasternewLine();
-                }
-            }
-        }
+       
     }
 
     public void allmastercallinonce()
