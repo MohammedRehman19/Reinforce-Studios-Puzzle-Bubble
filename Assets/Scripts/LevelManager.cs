@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
     public GameObject rightLine;
     private bool lastLineIsLeft = true;
     public string playerTag;
-
+    public InGameManager Gm;
     private void Start()
     {
         grid = GetComponent<Grid>();
@@ -97,7 +97,7 @@ public class LevelManager : MonoBehaviour
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
-                p.callonMasterBeforeNewLine();
+                p.callonMasterBeforeNewLine(Gm._ismine.ToString());
             }
         }
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
@@ -108,7 +108,7 @@ public class LevelManager : MonoBehaviour
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
-                p.callonMasterAfterNewLine();
+                p.callonMasterAfterNewLine(Gm._ismine.ToString());
             }
         }
 
