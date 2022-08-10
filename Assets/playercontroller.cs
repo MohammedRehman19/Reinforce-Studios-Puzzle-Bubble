@@ -274,14 +274,17 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
         }
     }
-    public void callonMasternewLine()
+    public void callonMasterAfterNewLine()
     {
-        photonView.RPC("onMasterNewLine", RpcTarget.MasterClient);
+        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others);
+    }
+    public void callonMasterBeforeNewLine()
+    {
+        photonView.RPC("onMasterBeforeNewLine", RpcTarget.Others);
     }
 
-
     [PunRPC]
-    void onMasterNewLine(string _ismine)
+    void onMasterAfterNewLine(string _ismine)
     {
         bool tempmine = false;
         if (_ismine.ToLower() == "true")
@@ -299,7 +302,32 @@ public class playercontroller : MonoBehaviourPunCallbacks
             if (S._ismine == tempmine)
             {
                 S.Lm.MasterCallAfterNewLine();
-                S.Lm.MasterCallBeforeNewLine();
+                //  S.Lm.MasterCallBeforeNewLine();
+            }
+        }
+    }
+
+
+    [PunRPC]
+    void onMasterBeforeNewLine(string _ismine)
+    {
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        //        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+        foreach (Shooter S in Shooters)
+        {
+            if (S._ismine == tempmine)
+            {
+               // S.Lm.MasterCallAfterNewLine();
+                  S.Lm.MasterCallBeforeNewLine();
             }
         }
     }

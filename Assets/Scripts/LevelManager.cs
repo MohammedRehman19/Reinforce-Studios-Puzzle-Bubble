@@ -91,15 +91,27 @@ public class LevelManager : MonoBehaviour
 
     public void allmastercallinonce()
     {
-        OffsetGrid();
-        OffsetBubblesInScene();
-
+        MasterCallBeforeNewLine();
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                p.callonMasterBeforeNewLine();
+            }
+        }
         GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
-    //    StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
-        StartCoroutine(FillWithBubblesNewLine(newLine, bubblesPrefabs));
+        StartCoroutine(FillWithBubbles(newLine, bubblesPrefabs));
+        //  StartCoroutine(FillWithBubblesNewLine(newLine, bubblesPrefabs));
+        MasterCallAfterNewLine();
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                p.callonMasterAfterNewLine();
+            }
+        }
 
-        SnapChildrensToGrid(bubblesArea);
-        lastLineIsLeft = !lastLineIsLeft;
     }
 
   public void MasterCallNewLine()
@@ -108,15 +120,18 @@ public class LevelManager : MonoBehaviour
     }
   public void MasterCallBeforeNewLine()
     {
-      
 
-        
+        OffsetGrid();
+        OffsetBubblesInScene();
+
+
     }
 
     public void MasterCallAfterNewLine()
     {
-        
-      
+
+        SnapChildrensToGrid(bubblesArea);
+        lastLineIsLeft = !lastLineIsLeft;
     }
 
     private void OffsetGrid()
