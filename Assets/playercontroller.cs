@@ -60,6 +60,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 OurShooter.Gm.counter = 10;
                 OurShooter.Gm.countertxt.enabled = false;
             }
+
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+              OurShooter.Lm.AddNewLine();
+            }
         }
 
 

@@ -36,10 +36,7 @@ public class LevelManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            AddNewLine();
-        }
+       
     }
 
     public void GenerateLevel()
@@ -82,11 +79,7 @@ public class LevelManager : MonoBehaviour
     [ContextMenu("AddLine")]
     public void AddNewLine()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            allmastercallinonce();
-        }
-       
+      allmastercallinonce();  
     }
 
     public void allmastercallinonce()
