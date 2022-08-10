@@ -274,13 +274,13 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
         }
     }
-    public void callonMasterAfterNewLine()
+    public void callonMasterAfterNewLine(string _ismine)
     {
-        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others);
+        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others,_ismine);
     }
-    public void callonMasterBeforeNewLine()
+    public void callonMasterBeforeNewLine(string _ismine)
     {
-        photonView.RPC("onMasterBeforeNewLine", RpcTarget.Others);
+        photonView.RPC("onMasterBeforeNewLine", RpcTarget.Others, _ismine);
     }
 
     [PunRPC]
