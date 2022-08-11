@@ -35,11 +35,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
+          /*  OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-            to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
+            to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
             /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
-            photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
+            photonView.RPC("move", RpcTarget.Others, Vid, to.eulerAngles.x, to.eulerAngles.y, to.eulerAngles.z);
         }
 
 
@@ -67,12 +67,16 @@ public class playercontroller : MonoBehaviourPunCallbacks
               OurShooter.Lm.AddNewLine();
             }
         }
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        print(mousePos);
+        Vector3 clampy = new Vector3(Mathf.Clamp(mousePos.x, -13f, 3), Mathf.Clamp(mousePos.y, -3.77f, 3.77f), 0);
 
-
-        Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
-        OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-        OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-        timeCount = timeCount + Time.deltaTime;
+      
+        to = Quaternion.LookRotation(Vector3.forward, clampy - OurShooter.transform.position);
+        Quaternion from = OurShooter.transform.rotation;
+         OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+         OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+         timeCount = timeCount + Time.deltaTime;
     }
     public void callshoot(int vidd)
     {
@@ -91,7 +95,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
     [PunRPC]
-    void move(int Vid, float r)
+    void move(int Vid, float x, float y, float z)
     {
         Shooter tempshooter = null;
         bool _isFirst = false;
@@ -112,8 +116,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-            //   print("move");
-            to = Quaternion.Euler(0f, 0f, r - 90);
+            Vector3 clampy = Vector3.zero;
+             to = Quaternion.LookRotation(Vector3.forward, clampy - OurShooter.transform.position);
 
         }
     }
