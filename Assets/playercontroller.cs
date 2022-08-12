@@ -46,11 +46,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        if (photonView.IsMine)
+        /*if (photonView.IsMine)
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-        }
+        }*/
 
             if (photonView.IsMine)
         {
