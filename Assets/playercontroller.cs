@@ -33,7 +33,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (photonView.IsMine)
+        if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y+4f))
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
@@ -46,13 +46,18 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-
         if (photonView.IsMine)
+        {
+            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
+            OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
+        }
+
+            if (photonView.IsMine)
         {
 
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y+4f))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();
