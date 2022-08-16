@@ -136,7 +136,7 @@ public class Shooter : MonoBehaviourPunCallbacks
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
-                print(_ismine);
+//                print(_ismine);
                 p.callnewbubble(_ismine.ToString(),newBubble.GetComponent<Bubble>().bubbleColor.ToString());
             }
         }

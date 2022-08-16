@@ -38,14 +38,14 @@ public class InGameManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
-        {
+        //if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
+        //{
             Invoke("startGame",2);
-        }
-        else
-        {
-            return;
-        }
+        //}
+        //else
+        //{
+        //    return;
+        //}
 
         if (pv == null)
         {
@@ -84,6 +84,9 @@ public class InGameManager : MonoBehaviourPunCallbacks
     }
      public void startGame()
     {
+        if (_isgamestarted)
+            return;
+
         _isgamestarted = true;
     }
     private void FixedUpdate()

@@ -11,6 +11,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     float speed = 0.01f;
     float timeCount = 0.0f;
     float shaketime = 30;
+    public bool _iscontrolActive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +35,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (!_iscontrolActive)
+            return;
+
         if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y+4f))
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
@@ -53,7 +57,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
         }*/
 
-            if (photonView.IsMine)
+        if (!_iscontrolActive)
+        {
+            return;
+        }
+
+        if (photonView.IsMine)
         {
 
             if (OurShooter.canShoot
@@ -75,7 +84,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                print(shaketime);
+//                print(shaketime);
                 shaketime -= Time.deltaTime;
 
                 if(shaketime < 5 && shaketime > 0)
@@ -100,6 +109,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("startShaking", RpcTarget.All, conditioner);
     }
+    public void callstartGame()
+    {
+        photonView.RPC("startGame", RpcTarget.All);
+    }
     public void callshoot(int vidd)
     {
         photonView.RPC("shoot", RpcTarget.Others, vidd);
@@ -116,7 +129,14 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
+
+
     [PunRPC]
+    void startGame()
+    {
+
+    }
+        [PunRPC]
     void move(int Vid, float r)
     {
         Shooter tempshooter = null;
