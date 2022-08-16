@@ -166,7 +166,7 @@ public class LevelManager : MonoBehaviour
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
             pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), bubblesArea.name, bubblesArea.transform.GetChild(counter).position.x, bubblesArea.transform.GetChild(counter).position.y, bubblesArea.transform.GetChild(counter).position.z);
             counter += 1;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.02f);
         }
 
         //  Destroy(go);

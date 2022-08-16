@@ -76,17 +76,20 @@ namespace Photon.Pun.Demo.PunBasics
 
 		}
 
-		#endregion
+        #endregion
+        private void Start()
+        {
+			Connect();
+        }
 
+        #region Public Methods
 
-		#region Public Methods
-
-		/// <summary>
-		/// Start the connection process. 
-		/// - If already connected, we attempt joining a random room
-		/// - if not yet connected, Connect this application instance to Photon Cloud Network
-		/// </summary>
-		public void Connect()
+        /// <summary>
+        /// Start the connection process. 
+        /// - If already connected, we attempt joining a random room
+        /// - if not yet connected, Connect this application instance to Photon Cloud Network
+        /// </summary>
+        public void Connect()
 		{
 			// we want to make sure the log is clear everytime we connect, we might have several failed attempted if connection failed.
 			feedbackText.text = "";

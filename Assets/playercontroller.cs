@@ -10,6 +10,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     Quaternion to;
     float speed = 0.01f;
     float timeCount = 0.0f;
+    float shaketime = 30;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,9 +68,25 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            //if (Input.GetKeyDown(KeyCode.Space))
+            //{
+            //  OurShooter.Lm.AddNewLine();
+            //}
+
+            if (PhotonNetwork.IsMasterClient)
             {
-              OurShooter.Lm.AddNewLine();
+                print(shaketime);
+                shaketime -= Time.deltaTime;
+
+                if(shaketime < 5 && shaketime > 0)
+                {
+                    callstartShaking("true");
+                }
+                else if (shaketime <= 0)
+                {
+                    callstartShaking("false");
+                    shaketime = 30;
+                }
             }
         }
 
@@ -78,6 +95,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
         OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
         OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
         timeCount = timeCount + Time.deltaTime;
+    }
+    public void callstartShaking(string conditioner)
+    {
+        photonView.RPC("startShaking", RpcTarget.All, conditioner);
     }
     public void callshoot(int vidd)
     {
@@ -154,6 +175,33 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void startShaking(string conditioner)
+    {
+
+        bool temp = false;
+        if(conditioner.ToLower() == "true")
+        {
+            temp = true;
+        }
+        else
+        {
+            temp = false;
+            
+        }
+
+        BubbleHandler [] BH = GameObject.FindObjectsOfType<BubbleHandler>();
+        foreach(var B in BH)
+        {
+            B._movement = temp;
+            if(B._movement == false)
+            {
+                B.addnewLine();
+            }
+        }
+    }
+
+
+        [PunRPC]
     void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
 
