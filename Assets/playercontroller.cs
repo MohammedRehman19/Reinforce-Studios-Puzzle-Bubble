@@ -76,6 +76,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
         }*/
 
+
+        Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
+        OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+        OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+        timeCount = timeCount + Time.deltaTime;
+
         if (!_iscontrolActive)
         {
             return;
@@ -128,10 +134,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
 
 
-        Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
-        OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-        OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-        timeCount = timeCount + Time.deltaTime;
+      
     }
     public void callstartShaking(string conditioner)
     {
