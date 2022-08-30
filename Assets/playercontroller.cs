@@ -47,7 +47,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
         }
 
-        if(OurShooter.Gm.counter > 0)
+       /* if(OurShooter.Gm.counter > 0)
         {
             OurShooter.Gm.counter -= Time.deltaTime;
         }
@@ -66,7 +66,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 OurShooter.Gm.counter = 10;
                 OurShooter.Gm.countertxt.enabled = false;
             }
-        }
+        }*/
     }
     private void Update()
     {
