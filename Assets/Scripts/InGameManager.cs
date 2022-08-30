@@ -46,7 +46,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            WaitingTxt.text = "Please wait, Looking for another player to the game.";
+            WaitingTxt.text = "Please wait, Looking for another player.";
             return;
         }
 
@@ -91,6 +91,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
             return;
 
         _isgamestarted = true;
+        WaitingTxt.gameObject.SetActive(false);
     }
     private void FixedUpdate()
     {
