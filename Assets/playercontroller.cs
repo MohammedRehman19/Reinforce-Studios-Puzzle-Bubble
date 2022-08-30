@@ -115,6 +115,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 {
                     print("startshaking false");
                     callstartShaking("false");
+                    calladdnewLine();
                     shaketime = 30;
                 }
             }
@@ -151,11 +152,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
 
-
     [PunRPC]
-    void startGame()
+    void calladdnewLine()
     {
-
+        photonView.RPC("AddnewLine", RpcTarget.All);
     }
     [PunRPC]
     void move(int Vid, float r)
@@ -229,20 +229,20 @@ public class playercontroller : MonoBehaviourPunCallbacks
             temp = false;
 
         }
-
         BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
         foreach (var B in BH)
         {
-            B._movement = temp;
-            if (B._movement == false)
-            {
-                print("called");
-                B.addnewLine();
-                return;
-            }
+            B._movement = temp;   
         }
     }
-
+    void AddnewLine()
+    {
+        BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
+        foreach (var B in BH)
+        {    
+          B.addnewLine();
+        }
+    }
 
     [PunRPC]
     void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
