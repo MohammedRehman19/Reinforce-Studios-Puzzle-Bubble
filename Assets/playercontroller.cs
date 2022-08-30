@@ -98,7 +98,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                calladdnewLine();
+              OurShooter.Lm.AddNewLine();
             }
 
             /* if (PhotonNetwork.IsMasterClient)
