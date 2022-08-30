@@ -11,7 +11,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     float speed = 0.01f;
     float timeCount = 0.0f;
     float shaketime = 30;
-  //  public bool _iscontrolActive = false;
+    public bool _iscontrolActive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,8 +35,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-       /* if (!_iscontrolActive)
-            return;*/
+        if (!_iscontrolActive)
+            return;
 
         if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
         {
@@ -47,7 +47,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
         }
 
-       /* if(OurShooter.Gm.counter > 0)
+        if(OurShooter.Gm.counter > 0)
         {
             OurShooter.Gm.counter -= Time.deltaTime;
         }
@@ -66,7 +66,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 OurShooter.Gm.counter = 10;
                 OurShooter.Gm.countertxt.enabled = false;
             }
-        }*/
+        }
     }
     private void Update()
     {
@@ -76,10 +76,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
         }*/
 
-       /* if (!_iscontrolActive)
+        if (!_iscontrolActive)
         {
             return;
-        }*/
+        }
 
         if (photonView.IsMine)
         {

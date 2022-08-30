@@ -201,13 +201,13 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
            
         }
-       /* foreach (playercontroller p in pc)
+        foreach (playercontroller p in pc)
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
                 p._iscontrolActive = true;
             }
-        }*/
+        }
         //  Destroy(go);
     }
 
