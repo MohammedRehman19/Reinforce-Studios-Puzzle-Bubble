@@ -96,29 +96,29 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
 
 
-            //if (Input.GetKeyDown(KeyCode.Space))
-            //{
-            //  OurShooter.Lm.AddNewLine();
-            //}
-
-            if (PhotonNetwork.IsMasterClient)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                //                print(shaketime);
-                shaketime -= Time.deltaTime;
-
-                if (shaketime < 5 && shaketime > 0)
-                {
-                    print("startshaking true");
-                    callstartShaking("true");
-                }
-                else if (shaketime <= 0)
-                {
-                    print("startshaking false");
-                    callstartShaking("false");
-                    calladdnewLine();
-                    shaketime = 30;
-                }
+                calladdnewLine();
             }
+
+            /* if (PhotonNetwork.IsMasterClient)
+             {
+                 //                print(shaketime);
+                 shaketime -= Time.deltaTime;
+
+                 if (shaketime < 5 && shaketime > 0)
+                 {
+                     print("startshaking true");
+                     callstartShaking("true");
+                 }
+                 else if (shaketime <= 0)
+                 {
+                     print("startshaking false");
+                     callstartShaking("false");
+                     calladdnewLine();
+                     shaketime = 30;
+                 }
+             }*/
         }
 
 
