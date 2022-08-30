@@ -96,29 +96,35 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Space))
+           /* if (Input.GetKeyDown(KeyCode.Space))
             {
-              OurShooter.Lm.AddNewLine();
-            }
+                foreach (Shooter S in Shooters)
+                {
+                    S.Lm.AddNewLine();
+                }
+            }*/
 
-            /* if (PhotonNetwork.IsMasterClient)
+             if (PhotonNetwork.IsMasterClient)
              {
-                 //                print(shaketime);
+                
                  shaketime -= Time.deltaTime;
 
                  if (shaketime < 5 && shaketime > 0)
                  {
-                     print("startshaking true");
+                  
                      callstartShaking("true");
                  }
                  else if (shaketime <= 0)
                  {
-                     print("startshaking false");
+                  
                      callstartShaking("false");
-                     calladdnewLine();
-                     shaketime = 30;
+                    foreach (Shooter S in Shooters)
+                    {
+                        S.Lm.AddNewLine();
+                    }
+                    shaketime = 30;
                  }
-             }*/
+             }
         }
 
 
@@ -152,10 +158,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
   
-    void calladdnewLine()
-    {
-        photonView.RPC("addnewLine", RpcTarget.All);
-    }
+   
     [PunRPC]
     void move(int Vid, float r)
     {
@@ -234,16 +237,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
             B._movement = temp;
         }
     }
-    [PunRPC]
-    void addnewLine()
-    {
-        BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
-        foreach (var B in BH)
-        {    
-          B.addnewLine();
-        }
-    }
-
+  
     [PunRPC]
     void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
