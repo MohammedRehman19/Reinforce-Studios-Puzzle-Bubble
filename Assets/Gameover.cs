@@ -34,11 +34,17 @@ public class Gameover : MonoBehaviour
         }
     }
 
-   public void GenerateGameover()
+    public void GenerateGameover()
     {
         foreach (Transform t in Lm.bubblesArea)
         {
-            t.transform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f,1);
+            t.transform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f, 1);
         }
+        Invoke("RestartGame",4);
+    }
+
+    public void RestartGame()
+    {
+        Application.LoadLevel(0);
     }
 }

@@ -14,7 +14,7 @@ public class Bubble : MonoBehaviour
     public LevelManager Lm;
     public InGameManager Gm;
     public bool _isGameoverLineChecker = false;
-
+   
     private void Start()
     {
        
@@ -41,6 +41,7 @@ public class Bubble : MonoBehaviour
                 HasCollided();
             }
         }
+       
     }
 
   
@@ -51,8 +52,11 @@ public class Bubble : MonoBehaviour
         Destroy(rb);
         isFixed = true;
         Lm.SetAsBubbleAreaChild(transform);
-       Gm.ProcessTurn(transform);
+        Gm.ProcessTurn(transform);
+       
     }
+
+   
 
     public List<Transform> GetNeighbors()
     {

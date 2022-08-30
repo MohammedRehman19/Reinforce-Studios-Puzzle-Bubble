@@ -38,7 +38,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         if (!_iscontrolActive)
             return;
 
-        if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y+4f))
+        if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
         {
             OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
@@ -47,7 +47,26 @@ public class playercontroller : MonoBehaviourPunCallbacks
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
         }
 
+        if(OurShooter.Gm.counter > 0)
+        {
+            OurShooter.Gm.counter -= Time.deltaTime;
+        }
 
+        if (OurShooter.Gm.counter < 5 && OurShooter.Gm.counter > 0)
+        {
+            OurShooter.Gm.countertxt.enabled = true;
+        }
+        else if (OurShooter.Gm.counter <= 0)
+        {
+            if (photonView.IsMine)
+            {
+                OurShooter.canShoot = false;
+                OurShooter.Shoot();
+                photonView.RPC("shoot", RpcTarget.Others, Vid);
+                OurShooter.Gm.counter = 10;
+                OurShooter.Gm.countertxt.enabled = false;
+            }
+        }
     }
     private void Update()
     {
@@ -67,7 +86,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y+4f))
+           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();
@@ -84,10 +103,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-//                print(shaketime);
+                //                print(shaketime);
                 shaketime -= Time.deltaTime;
 
-                if(shaketime < 5 && shaketime > 0)
+                if (shaketime < 5 && shaketime > 0)
                 {
                     callstartShaking("true");
                 }
@@ -136,7 +155,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
 
     }
-        [PunRPC]
+    [PunRPC]
     void move(int Vid, float r)
     {
         Shooter tempshooter = null;
@@ -199,21 +218,21 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
 
         bool temp = false;
-        if(conditioner.ToLower() == "true")
+        if (conditioner.ToLower() == "true")
         {
             temp = true;
         }
         else
         {
             temp = false;
-            
+
         }
 
-        BubbleHandler [] BH = GameObject.FindObjectsOfType<BubbleHandler>();
-        foreach(var B in BH)
+        BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
+        foreach (var B in BH)
         {
             B._movement = temp;
-            if(B._movement == false)
+            if (B._movement == false)
             {
                 B.addnewLine();
             }
@@ -221,7 +240,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
 
 
-        [PunRPC]
+    [PunRPC]
     void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
 
@@ -355,12 +374,18 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     public void callonMasterAfterNewLine(string _ismine)
     {
-        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others,_ismine);
+        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others, _ismine);
     }
     public void callonMasterBeforeNewLine(string _ismine)
     {
         photonView.RPC("onMasterBeforeNewLine", RpcTarget.Others, _ismine);
     }
+
+    public void callAddscore(string _ismine)
+    {
+        photonView.RPC("Addscore", RpcTarget.All, _ismine);
+    }
+
 
     [PunRPC]
     void onMasterAfterNewLine(string _ismine)
@@ -405,8 +430,35 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (S._ismine == tempmine)
             {
-               // S.Lm.MasterCallAfterNewLine();
-                  S.Lm.MasterCallBeforeNewLine();
+                // S.Lm.MasterCallAfterNewLine();
+                S.Lm.MasterCallBeforeNewLine();
+            }
+        }
+    }
+
+
+    [PunRPC]
+    void Addscore(string _ismine)
+    {
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        //        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+        print("weeee3333");
+        foreach (Shooter S in Shooters)
+        {
+            print("weeee444");
+            if (S._ismine == tempmine)
+            {
+                print("weeee");
+                S.Lm.bubblesArea.GetComponent<BubbleHandler>().Addscore(5);
             }
         }
     }

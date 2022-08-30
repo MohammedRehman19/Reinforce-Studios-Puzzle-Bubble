@@ -13,7 +13,7 @@ public class ApiHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(WaitForServerResponse());
+      //  StartCoroutine(WaitForServerResponse());
     }
 
     // Update is called once per frame
@@ -22,7 +22,7 @@ public class ApiHandler : MonoBehaviour
 
     }
 
-    IEnumerator WaitForServerResponse()
+   /* IEnumerator WaitForServerResponse()
     {
 
         WWWForm form = new WWWForm();
@@ -71,6 +71,6 @@ public class ApiHandler : MonoBehaviour
 
     }
 
-
+    */
 
 }

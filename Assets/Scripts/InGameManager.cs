@@ -24,10 +24,11 @@ public class InGameManager : MonoBehaviourPunCallbacks
     public List<Transform> bubbleSequence;
     public LevelManager LM;
     public float counter = 10;
-    public TextMeshProUGUI countertxt;
+    public TextMeshProUGUI countertxt,scoretxt;
     public PhotonView pv;
     public bool _ismine;
     public bool _isgamestarted = false;
+    public TextMeshProUGUI WaitingTxt;
     void Start()
     {
        
@@ -38,14 +39,16 @@ public class InGameManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        //if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
-        //{
+        if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
+        {
+            WaitingTxt.text = "Please wait, Loading Game now.";
             Invoke("startGame",2);
-        //}
-        //else
-        //{
-        //    return;
-        //}
+        }
+        else
+        {
+            WaitingTxt.text = "Please wait, Looking for another player to the game.";
+            return;
+        }
 
         if (pv == null)
         {
@@ -182,6 +185,15 @@ public class InGameManager : MonoBehaviourPunCallbacks
         foreach(Transform t in bubbleSequence)
         {
             Destroy(t.gameObject);
+            playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+            foreach (playercontroller p in pc)
+            {
+                if (p.GetComponent<PhotonView>().IsMine)
+                {
+                    print("calling");
+                    p.callAddscore(_ismine.ToString());
+                }
+            }
         }
     }
 

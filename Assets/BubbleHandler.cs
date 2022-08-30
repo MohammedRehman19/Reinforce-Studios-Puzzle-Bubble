@@ -10,11 +10,12 @@ public class BubbleHandler : MonoBehaviour
     public float min = 2f;
     public float max = 3f;
     public bool _movement = false;
+    public int counter = 0;
     Vector3 Startingpoint;
     // Start is called before the first frame update
     void Start()
     {
-        min = transform.position.x-0.1f;
+        min = transform.position.x - 0.1f;
         max = transform.position.x + 0.1f;
         Startingpoint = transform.position;
     }
@@ -32,5 +33,12 @@ public class BubbleHandler : MonoBehaviour
     public void addnewLine()
     {
         Lm.AddNewLine();
+    }
+
+    public void Addscore(int score)
+    {
+        print("INNNNNN");
+        counter += score;
+        GM.scoretxt.text = counter.ToString();
     }
 }
