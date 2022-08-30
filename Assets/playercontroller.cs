@@ -177,7 +177,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-            //   print("move");
+               print("move");
             to = Quaternion.Euler(0f, 0f, r - 90);
 
         }
@@ -451,13 +451,13 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         //        print(tempmine +" = aaa");
         Shooters = GameObject.FindObjectsOfType<Shooter>();
-        print("weeee3333");
+      //  print("weeee3333");
         foreach (Shooter S in Shooters)
         {
-            print("weeee444");
+        //    print("weeee444");
             if (S._ismine == tempmine)
             {
-                print("weeee");
+            //    print("weeee");
                 S.Lm.bubblesArea.GetComponent<BubbleHandler>().Addscore(5);
             }
         }

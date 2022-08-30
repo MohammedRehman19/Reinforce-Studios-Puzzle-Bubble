@@ -191,7 +191,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
             {
                 if (p.GetComponent<PhotonView>().IsMine)
                 {
-                    print("calling");
+                //    print("calling");
                     p.callAddscore(_ismine.ToString());
                 }
             }
