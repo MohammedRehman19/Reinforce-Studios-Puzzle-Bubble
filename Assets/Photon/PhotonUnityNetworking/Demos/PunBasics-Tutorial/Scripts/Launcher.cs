@@ -79,7 +79,7 @@ namespace Photon.Pun.Demo.PunBasics
         #endregion
         private void Start()
         {
-			//Connect();
+			Invoke("Connect",2);
         }
 
         #region Public Methods
