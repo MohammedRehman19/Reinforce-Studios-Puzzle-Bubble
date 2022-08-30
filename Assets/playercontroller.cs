@@ -108,10 +108,12 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
                 if (shaketime < 5 && shaketime > 0)
                 {
+                    print("startshaking true");
                     callstartShaking("true");
                 }
                 else if (shaketime <= 0)
                 {
+                    print("startshaking false");
                     callstartShaking("false");
                     shaketime = 30;
                 }
@@ -177,7 +179,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-               print("move");
+           //    print("move");
             to = Quaternion.Euler(0f, 0f, r - 90);
 
         }
@@ -216,7 +218,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     [PunRPC]
     void startShaking(string conditioner)
     {
-
+        
         bool temp = false;
         if (conditioner.ToLower() == "true")
         {
@@ -234,7 +236,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
             B._movement = temp;
             if (B._movement == false)
             {
+                print("called");
                 B.addnewLine();
+                return;
             }
         }
     }

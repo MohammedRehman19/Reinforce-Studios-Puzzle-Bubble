@@ -37,7 +37,7 @@ public class BubbleHandler : MonoBehaviour
 
     public void Addscore(int score)
     {
-        print("INNNNNN");
+      //  print("INNNNNN");
         counter += score;
         GM.scoretxt.text = counter.ToString();
     }
