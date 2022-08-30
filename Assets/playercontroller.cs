@@ -151,11 +151,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
-
-    [PunRPC]
+  
     void calladdnewLine()
     {
-        photonView.RPC("AddnewLine", RpcTarget.All);
+        photonView.RPC("addnewLine", RpcTarget.All);
     }
     [PunRPC]
     void move(int Vid, float r)
@@ -218,7 +217,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
     [PunRPC]
     void startShaking(string conditioner)
     {
-        
+
         bool temp = false;
         if (conditioner.ToLower() == "true")
         {
@@ -232,10 +231,11 @@ public class playercontroller : MonoBehaviourPunCallbacks
         BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
         foreach (var B in BH)
         {
-            B._movement = temp;   
+            B._movement = temp;
         }
     }
-    void AddnewLine()
+    [PunRPC]
+    void addnewLine()
     {
         BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
         foreach (var B in BH)
