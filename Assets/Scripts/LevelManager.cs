@@ -205,7 +205,7 @@ public class LevelManager : MonoBehaviour
         {
             if (p.GetComponent<PhotonView>().IsMine)
             {
-                p._iscontrolActive = true;
+                p.callactivePlayer();
             }
         }
         //  Destroy(go);

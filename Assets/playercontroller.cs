@@ -306,19 +306,21 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
 
     }
-    public void callbubbleSequence()
+    public void callactivePlayer()
     {
-        photonView.RPC("bubbleSequence", RpcTarget.Others);
+        photonView.RPC("activePlayer", RpcTarget.All);
     }
     [PunRPC]
-    void bubbleSequence()
+    void activePlayer()
     {
-        foreach (Shooter S in Shooters)
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+
+        foreach(playercontroller temp in pc)
         {
-
-            //                S.Gm.bubbleSequence = new List<Transform>();
-
-
+            if (temp.GetComponent<PhotonView>().IsMine)
+            {
+                temp._iscontrolActive = true;
+            }
         }
     }
     public void callnewbubble(string _ismine, string name)
