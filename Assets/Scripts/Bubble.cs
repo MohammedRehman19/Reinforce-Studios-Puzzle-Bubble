@@ -25,17 +25,21 @@ public class Bubble : MonoBehaviour
     private Vector3 lastFrameVelocity;
     private Rigidbody rb;
 
+    private bool _isRigid;
     private void OnEnable()
     {
-        if (GetComponent<Rigidbody>() != null)
-        {
-            rb = GetComponent<Rigidbody>();
-            rb.velocity = initialVelocity;
-        }
+       
     }
 
     private void Update()
     {
+        if (GetComponent<Rigidbody>() != null && !_isRigid)
+        {
+            rb = GetComponent<Rigidbody>();
+            rb.velocity = initialVelocity;
+            _isRigid = true;
+        }
+
         if (rb != null)
         {
             lastFrameVelocity = rb.velocity;
