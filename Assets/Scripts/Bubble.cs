@@ -41,7 +41,13 @@ public class Bubble : MonoBehaviour
                 HasCollided();
             }
         }
-       
+
+        if (collision.gameObject.tag == "walls")
+        {
+            print("walls");
+            GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +
+                new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));
+        }
     }
 
   
