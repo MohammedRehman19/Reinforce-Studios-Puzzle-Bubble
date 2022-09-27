@@ -14,13 +14,28 @@ public class Bubble : MonoBehaviour
     public LevelManager Lm;
     public InGameManager Gm;
     public bool _isGameoverLineChecker = false;
-   
-    private void Start()
+
+    [SerializeField]
+    [Tooltip("Just for debugging, adds some velocity during OnEnable")]
+    private Vector3 initialVelocity;
+
+    [SerializeField]
+    private float minVelocity = 10f;
+
+    private Vector3 lastFrameVelocity;
+    private Rigidbody rb;
+
+    private void OnEnable()
     {
-       
-        
-        
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = initialVelocity;
     }
+
+    private void Update()
+    {
+        lastFrameVelocity = rb.velocity;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -42,16 +57,27 @@ public class Bubble : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "walls")
-        {
-            print("walls");
-            GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +
-                new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));
-        }
+
+        Bounce(collision.contacts[0].normal);
+        /*
+                if (collision.gameObject.tag == "walls")
+                {
+                    print("walls");
+                    GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +
+                        new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));
+                }*/
     }
 
-  
    
+    private void Bounce(Vector3 collisionNormal)
+    {
+        var speed = lastFrameVelocity.magnitude;
+        var direction = Vector3.Reflect(lastFrameVelocity.normalized, collisionNormal);
+
+        Debug.Log("Out Direction: " + direction);
+        rb.velocity = direction * Mathf.Max(speed, minVelocity);
+    }
+
     private void HasCollided()
     {
         var rb = GetComponent<Rigidbody2D>();
