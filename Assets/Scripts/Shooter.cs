@@ -59,7 +59,7 @@ public class Shooter : MonoBehaviourPunCallbacks
     {
 
         currentBubble.transform.rotation = transform.rotation;
-        currentBubble.GetComponent<Rigidbody2D>().AddForce(currentBubble.transform.up * speed*10);
+        currentBubble.GetComponent<Rigidbody2D>().AddForce(currentBubble.transform.up * speed, ForceMode2D.Impulse);
         currentBubble = null;
     }
 
