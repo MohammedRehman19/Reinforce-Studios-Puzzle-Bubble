@@ -89,10 +89,9 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-
+            //a
             if (OurShooter.canShoot
-           && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
+           && Input.GetMouseButtonUp(0))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();

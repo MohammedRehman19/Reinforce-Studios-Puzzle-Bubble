@@ -23,7 +23,7 @@ public class Bubble : MonoBehaviour
     private float minVelocity = 10f;
 
     private Vector3 lastFrameVelocity;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
 
     private bool _isRigid;
     private void OnEnable()
@@ -33,22 +33,28 @@ public class Bubble : MonoBehaviour
 
     private void Update()
     {
-        if (GetComponent<Rigidbody>() != null && !_isRigid)
+        if (GetComponent<Rigidbody2D>() != null && !_isRigid)
         {
-            rb = GetComponent<Rigidbody>();
+            print("got rigidbody...");
+            rb = GetComponent<Rigidbody2D>();
             rb.velocity = initialVelocity;
             _isRigid = true;
         }
 
         if (rb != null)
         {
+            print("got values...");
             lastFrameVelocity = rb.velocity;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Bounce(collision.contacts[0].normal);
+        print("got rigidbody...");
+        if (collision.gameObject.tag == "walls")
+        {
+            Bounce(collision.contacts[0].normal);
+        }
         if (collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().isFixed)
         {
 
