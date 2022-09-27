@@ -27,8 +27,11 @@ public class Bubble : MonoBehaviour
 
     private void OnEnable()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.velocity = initialVelocity;
+        if (GetComponent<Rigidbody>() != null)
+        {
+            rb = GetComponent<Rigidbody>();
+            rb.velocity = initialVelocity;
+        }
     }
 
     private void Update()
