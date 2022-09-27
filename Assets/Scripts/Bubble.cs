@@ -48,7 +48,7 @@ public class Bubble : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
+        Bounce(collision.contacts[0].normal);
         if (collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().isFixed)
         {
 
@@ -68,7 +68,7 @@ public class Bubble : MonoBehaviour
         }
 
 
-        Bounce(collision.contacts[0].normal);
+       
         /*
                 if (collision.gameObject.tag == "walls")
                 {
