@@ -33,19 +33,19 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 		void Start () {
 		
-			string defaultName = string.Empty;
+			/*string defaultName = string.Empty;
 			InputField _inputField = this.GetComponent<InputField>();
 
 			if (_inputField!=null)
 			{
 				if (PlayerPrefs.HasKey(playerNamePrefKey))
-				{
-					defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-					_inputField.text = defaultName;
-				}
-			}
+				{*/
+				//	defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+				//	_inputField.text = defaultName;
+				/*}
+			}*/
 
-			PhotonNetwork.NickName =	defaultName;
+			PhotonNetwork.NickName = PlayerPrefs.GetString(playerNamePrefKey,"NameRandom"+Random.Range(0000,9999).ToString());
 		}
 
 		#endregion

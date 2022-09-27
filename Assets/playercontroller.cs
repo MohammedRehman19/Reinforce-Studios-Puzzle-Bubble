@@ -10,6 +10,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
     Quaternion to;
     float speed = 0.01f;
     float timeCount = 0.0f;
+    float shaketime = 30;
+    public bool _iscontrolActive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,26 +35,64 @@ public class playercontroller : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (photonView.IsMine)
+        if (!_iscontrolActive)
+            return;
+
+        if (photonView.IsMine && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
         {
-          /*  OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
+            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
             OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
-            to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
+            to = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);
             /*    OurShooter.transform.rotation = Quaternion.Euler(0f, 0f, OurShooter.lookAngle - 90f);*/
-            photonView.RPC("move", RpcTarget.Others, Vid, to.eulerAngles.x, to.eulerAngles.y, to.eulerAngles.z);
+            photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
         }
 
+        if(OurShooter.Gm.counter > 0)
+        {
+            OurShooter.Gm.counter -= Time.deltaTime;
+        }
 
+        if (OurShooter.Gm.counter < 5 && OurShooter.Gm.counter > 0)
+        {
+            OurShooter.Gm.countertxt.enabled = true;
+        }
+        else if (OurShooter.Gm.counter <= 0)
+        {
+            if (photonView.IsMine)
+            {
+                OurShooter.canShoot = false;
+                OurShooter.Shoot();
+                photonView.RPC("shoot", RpcTarget.Others, Vid);
+                OurShooter.Gm.counter = 10;
+                OurShooter.Gm.countertxt.enabled = false;
+            }
+        }
     }
     private void Update()
     {
+        /*if (photonView.IsMine)
+        {
+            OurShooter.lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - OurShooter.transform.position;
+            OurShooter.lookAngle = Mathf.Atan2(OurShooter.lookDirection.y, OurShooter.lookDirection.x) * Mathf.Rad2Deg;
+        }*/
+
+
+        Quaternion from = new Quaternion(OurShooter.transform.rotation.x, OurShooter.transform.rotation.y, OurShooter.transform.rotation.z, OurShooter.transform.rotation.w);
+        OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+        OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
+        timeCount = timeCount + Time.deltaTime;
+
+        if (!_iscontrolActive)
+        {
+            return;
+        }
 
         if (photonView.IsMine)
         {
 
             if (OurShooter.canShoot
            && Input.GetMouseButtonUp(0)
-           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y))
+           && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > OurShooter.transform.position.y + 4f))
             {
                 OurShooter.canShoot = false;
                 OurShooter.Shoot();
@@ -62,21 +102,47 @@ public class playercontroller : MonoBehaviourPunCallbacks
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Space))
+           /* if (Input.GetKeyDown(KeyCode.Space))
             {
-              OurShooter.Lm.AddNewLine();
-            }
+                foreach (Shooter S in Shooters)
+                {
+                    S.Lm.AddNewLine();
+                }
+            }*/
+
+             if (PhotonNetwork.IsMasterClient)
+             {
+                
+                 shaketime -= Time.deltaTime;
+
+                 if (shaketime < 5 && shaketime > 0)
+                 {
+                  
+                     callstartShaking("true");
+                 }
+                 else if (shaketime <= 0)
+                 {
+                  
+                     callstartShaking("false");
+                    foreach (Shooter S in Shooters)
+                    {
+                        S.Lm.AddNewLine();
+                    }
+                    shaketime = 30;
+                 }
+             }
         }
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        print(mousePos);
-        Vector3 clampy = new Vector3(Mathf.Clamp(mousePos.x, -13f, 3), Mathf.Clamp(mousePos.y, -3.77f, 3.77f), 0);
+
 
       
-        to = Quaternion.LookRotation(Vector3.forward, clampy - OurShooter.transform.position);
-        Quaternion from = OurShooter.transform.rotation;
-         OurShooter.transform.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-         OurShooter.gunSprite.rotation = Quaternion.Lerp(from, to, timeCount * speed);
-         timeCount = timeCount + Time.deltaTime;
+    }
+    public void callstartShaking(string conditioner)
+    {
+        photonView.RPC("startShaking", RpcTarget.All, conditioner);
+    }
+    public void callstartGame()
+    {
+        photonView.RPC("startGame", RpcTarget.All);
     }
     public void callshoot(int vidd)
     {
@@ -94,8 +160,10 @@ public class playercontroller : MonoBehaviourPunCallbacks
     {
         photonView.RPC("createshoot", RpcTarget.Others, _isMine);
     }
+  
+   
     [PunRPC]
-    void move(int Vid, float x, float y, float z)
+    void move(int Vid, float r)
     {
         Shooter tempshooter = null;
         bool _isFirst = false;
@@ -116,8 +184,8 @@ public class playercontroller : MonoBehaviourPunCallbacks
         }
         if (tempshooter != null)
         {
-            Vector3 clampy = Vector3.zero;
-             to = Quaternion.LookRotation(Vector3.forward, clampy - OurShooter.transform.position);
+           //    print("move");
+            to = Quaternion.Euler(0f, 0f, r - 90);
 
         }
     }
@@ -152,6 +220,27 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
     }
 
+    [PunRPC]
+    void startShaking(string conditioner)
+    {
+
+        bool temp = false;
+        if (conditioner.ToLower() == "true")
+        {
+            temp = true;
+        }
+        else
+        {
+            temp = false;
+
+        }
+        BubbleHandler[] BH = GameObject.FindObjectsOfType<BubbleHandler>();
+        foreach (var B in BH)
+        {
+            B._movement = temp;
+        }
+    }
+  
     [PunRPC]
     void createbubble(string Area, string BubbleArea, float xs, float ys, float zs)
     {
@@ -217,19 +306,21 @@ public class playercontroller : MonoBehaviourPunCallbacks
 
 
     }
-    public void callbubbleSequence()
+    public void callactivePlayer()
     {
-        photonView.RPC("bubbleSequence", RpcTarget.Others);
+        photonView.RPC("activePlayer", RpcTarget.All);
     }
     [PunRPC]
-    void bubbleSequence()
+    void activePlayer()
     {
-        foreach (Shooter S in Shooters)
+        playercontroller[] pc = GameObject.FindObjectsOfType<playercontroller>();
+
+        foreach(playercontroller temp in pc)
         {
-
-            //                S.Gm.bubbleSequence = new List<Transform>();
-
-
+            if (temp.GetComponent<PhotonView>().IsMine)
+            {
+                temp._iscontrolActive = true;
+            }
         }
     }
     public void callnewbubble(string _ismine, string name)
@@ -286,12 +377,18 @@ public class playercontroller : MonoBehaviourPunCallbacks
     }
     public void callonMasterAfterNewLine(string _ismine)
     {
-        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others,_ismine);
+        photonView.RPC("onMasterAfterNewLine", RpcTarget.Others, _ismine);
     }
     public void callonMasterBeforeNewLine(string _ismine)
     {
         photonView.RPC("onMasterBeforeNewLine", RpcTarget.Others, _ismine);
     }
+
+    public void callAddscore(string _ismine)
+    {
+        photonView.RPC("Addscore", RpcTarget.All, _ismine);
+    }
+
 
     [PunRPC]
     void onMasterAfterNewLine(string _ismine)
@@ -336,8 +433,35 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (S._ismine == tempmine)
             {
-               // S.Lm.MasterCallAfterNewLine();
-                  S.Lm.MasterCallBeforeNewLine();
+                // S.Lm.MasterCallAfterNewLine();
+                S.Lm.MasterCallBeforeNewLine();
+            }
+        }
+    }
+
+
+    [PunRPC]
+    void Addscore(string _ismine)
+    {
+        bool tempmine = false;
+        if (_ismine.ToLower() == "true")
+        {
+            tempmine = true;
+        }
+        else
+        {
+            tempmine = false;
+        }
+        //        print(tempmine +" = aaa");
+        Shooters = GameObject.FindObjectsOfType<Shooter>();
+      //  print("weeee3333");
+        foreach (Shooter S in Shooters)
+        {
+        //    print("weeee444");
+            if (S._ismine == tempmine)
+            {
+            //    print("weeee");
+                S.Lm.bubblesArea.GetComponent<BubbleHandler>().Addscore(5);
             }
         }
     }

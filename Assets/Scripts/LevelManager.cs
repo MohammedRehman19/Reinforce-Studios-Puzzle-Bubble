@@ -166,7 +166,9 @@ public class LevelManager : MonoBehaviour
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
             pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(), bubblesArea.name, bubblesArea.transform.GetChild(counter).position.x, bubblesArea.transform.GetChild(counter).position.y, bubblesArea.transform.GetChild(counter).position.z);
             counter += 1;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.02f);
+
+          
         }
 
         //  Destroy(go);
@@ -187,7 +189,7 @@ public class LevelManager : MonoBehaviour
         while (go.transform.childCount > counter)
         {
             var bubble = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)]);
-            print(bubble.gameObject.name);
+//            print(bubble.gameObject.name);
             bubble.transform.SetParent(bubblesArea);
             bubble.transform.localPosition = go.transform.GetChild(counter).localPosition;
             
@@ -196,10 +198,17 @@ public class LevelManager : MonoBehaviour
             bubble.GetComponent<Bubble>()._isGameoverLineChecker = true;
             pv.callCreatebubble(bubble.GetComponent<Bubble>().bubbleColor.ToString(),bubblesArea.name, go.transform.GetChild(counter).localPosition.x, go.transform.GetChild(counter).localPosition.y, go.transform.GetChild(counter).localPosition.z);
             counter += 1;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
+           
         }
-
-      //  Destroy(go);
+        foreach (playercontroller p in pc)
+        {
+            if (p.GetComponent<PhotonView>().IsMine)
+            {
+                p.callactivePlayer();
+            }
+        }
+        //  Destroy(go);
     }
 
     public void UpdateListOfBubblesInScene()
