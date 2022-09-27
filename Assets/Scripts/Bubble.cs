@@ -33,7 +33,10 @@ public class Bubble : MonoBehaviour
 
     private void Update()
     {
-        lastFrameVelocity = rb.velocity;
+        if (rb != null)
+        {
+            lastFrameVelocity = rb.velocity;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
