@@ -47,7 +47,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
             photonView.RPC("move", RpcTarget.Others, Vid, OurShooter.lookAngle);
         }
 
-      /*  if(OurShooter.Gm.counter > 0)
+        if(OurShooter.Gm.counter > 0)
         {
             OurShooter.Gm.counter -= Time.deltaTime;
         }
@@ -60,13 +60,13 @@ public class playercontroller : MonoBehaviourPunCallbacks
         {
             if (photonView.IsMine)
             {
-               *//* OurShooter.canShoot = false;
-                OurShooter.Shoot();
-                photonView.RPC("shoot", RpcTarget.Others, Vid);*//*
+               //* OurShooter.canShoot = false;
+              //  OurShooter.Shoot();
+              //  photonView.RPC("shoot", RpcTarget.Others, Vid);
                 OurShooter.Gm.counter = 10;
                 OurShooter.Gm.countertxt.enabled = false;
             }
-        }*/
+        }
     }
     private void Update()
     {
@@ -109,7 +109,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                 }
             }*/
 
-            /* if (PhotonNetwork.IsMasterClient)
+             if (PhotonNetwork.IsMasterClient)
              {
                 
                  shaketime -= Time.deltaTime;
@@ -129,7 +129,7 @@ public class playercontroller : MonoBehaviourPunCallbacks
                     }
                     shaketime = 30;
                  }
-             }*/
+             }
         }
 
 

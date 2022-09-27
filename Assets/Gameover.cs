@@ -1,3 +1,4 @@
+using Photon.Pun.Demo.PunBasics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,11 +37,20 @@ public class Gameover : MonoBehaviour
 
     public void GenerateGameover()
     {
+
+        //   GetComponent<GameManager>().GameOverObjects
+
+
+       for(int i = 0; i < GameObject.FindObjectOfType<GameOverHander>().GameOverObjects.Count; i++)
+        {
+            GameObject.FindObjectOfType<GameOverHander>().GameOverObjects[i].SetActive(false);
+        }
+
         foreach (Transform t in Lm.bubblesArea)
         {
             t.transform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f, 1);
         }
-        Invoke("RestartGame",4);
+     //   Invoke("RestartGame",4);
     }
 
     public void RestartGame()

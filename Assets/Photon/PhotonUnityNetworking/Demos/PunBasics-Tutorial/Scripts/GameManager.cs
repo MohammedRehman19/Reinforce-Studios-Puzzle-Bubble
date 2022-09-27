@@ -10,8 +10,9 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 using Photon.Realtime;
+using System.Collections.Generic;
 
 namespace Photon.Pun.Demo.PunBasics
 {
@@ -23,9 +24,12 @@ namespace Photon.Pun.Demo.PunBasics
 	/// Deals with quiting the room and the game
 	/// Deals with level loading (outside the in room synchronization)
 	/// </summary>
+
+
+
 	public class GameManager : MonoBehaviourPunCallbacks
     {
-
+		
 		#region Public Fields
 
 		static public GameManager Instance;
