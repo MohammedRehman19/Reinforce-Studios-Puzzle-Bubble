@@ -41,12 +41,12 @@ public class InGameManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
-            WaitingTxt.text = "Please wait, Loading Game now.";
+            WaitingTxt.text = "connecting.";
             Invoke("startGame",2);
         }
         else
         {
-            WaitingTxt.text = "Please wait, Looking for another player.";
+            WaitingTxt.text = "connecting.";
             return;
         }
 
